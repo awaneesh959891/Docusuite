@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.AdminPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:models="clr-namespace:MauiApp.Models"
+	xmlns:svc="clr-namespace:MauiApp.Services"
+	xmlns:vm="clr-namespace:MauiApp.PageModels"
+	x:DataType="vm:AdminViewModel"
+	Title="Admin"
+	BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+	<ContentPage.Resources>
+		<Style x:Key="Card" TargetType="Border">
+			<Setter Property="StrokeThickness" Value="1" />
+			<Setter Property="Padding" Value="16" />
+			<Setter Property="Stroke" Value="{AppThemeBinding Light=#E5E7EB, Dark=#33333C}" />
+			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark={StaticResource DarkSecondaryBackground}}" />
+			<Setter Property="StrokeShape" Value="RoundRectangle 20" />
+		</Style>
+		<Style x:Key="SectionLabel" TargetType="Label">
+			<Setter Property="FontAttributes" Value="Bold" />
+			<Setter Property="FontSize" Value="13" />
+			<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+		</Style>
+		<Style x:Key="Small" TargetType="Button">
+			<Setter Property="HeightRequest" Value="38" />
+			<Setter Property="Padding" Value="14,0" />
+			<Setter Property="CornerRadius" Value="19" />
+			<Setter Property="FontSize" Value="13" />
+		</Style>
+	</ContentPage.Resources>
+
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="820">
+
+			<Label Text="Admin" FontSize="28" FontAttributes="Bold"
+				   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+			<Label Text="{Binding Status}" TextColor="{StaticResource Primary}" />
+
+			<!-- Overview -->
+			<Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+				<Border Style="{StaticResource Card}">
+					<VerticalStackLayout>
+						<Label Text="OPERATIONS" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding Operations}" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+					</VerticalStackLayout>
+				</Border>
+				<Border Grid.Column="1" Style="{StaticResource Card}">
+					<VerticalStackLayout>
+						<Label Text="FILES CREATED" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding FilesCreated}" FontSize="28" FontAttributes="Bold" TextColor="#10B981" />
+					</VerticalStackLayout>
+				</Border>
+				<Border Grid.Row="1" Style="{StaticResource Card}">
+					<VerticalStackLayout>
+						<Label Text="STORAGE USED" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding Storage}" FontSize="28" FontAttributes="Bold" TextColor="#F59E0B" />
+					</VerticalStackLayout>
+				</Border>
+				<Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}">
+					<VerticalStackLayout>
+						<Label Text="SAVED BY COMPRESS" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding Saved}" FontSize="28" FontAttributes="Bold" TextColor="#EC4899" />
+					</VerticalStackLayout>
+				</Border>
+			</Grid>
+
+			<!-- Users -->
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="10">
+					<Label Text="{Binding UserCount, StringFormat='USERS ({0})'}" Style="{StaticResource SectionLabel}" />
+					<Label Text="No users have signed up yet." IsVisible="{Binding HasNoUsers}" />
+					<VerticalStackLayout BindableLayout.ItemsSource="{Binding Users}" Spacing="10">
+						<BindableLayout.ItemTemplate>
+							<DataTemplate x:DataType="svc:UserAccount">
+								<Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+									<VerticalStackLayout VerticalOptions="Center">
+										<Label Text="{Binding DisplayName}" FontAttributes="Bold" />
+										<Label Text="{Binding Email}" FontSize="12" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+										<Label Text="{Binding LastSeen}" FontSize="11" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+										<Label Text="{Binding Status}" FontSize="11" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+									</VerticalStackLayout>
+									<HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+										<Button Text="{Binding ToggleText}" Style="{StaticResource Small}"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=ToggleUserCommand}"
+												CommandParameter="{Binding .}" />
+										<Button Text="✕" Style="{StaticResource Small}" WidthRequest="38" Padding="0" TextColor="#EF4444"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteUserCommand}"
+												CommandParameter="{Binding .}" />
+									</HorizontalStackLayout>
+								</Grid>
+							</DataTemplate>
+						</BindableLayout.ItemTemplate>
+					</VerticalStackLayout>
+				</VerticalStackLayout>
+			</Border>
+
+			<!-- Top tools -->
+			<Border Style="{StaticResource Card}" IsVisible="{Binding HasTopTools}">
+				<VerticalStackLayout Spacing="10">
+					<Label Text="MOST USED TOOLS" Style="{StaticResource SectionLabel}" />
+					<VerticalStackLayout BindableLayout.ItemsSource="{Binding TopTools}" Spacing="8">
+						<BindableLayout.ItemTemplate>
+							<DataTemplate x:DataType="models:ToolUsage">
+								<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+									<Label Text="{Binding Glyph}" FontSize="20" VerticalOptions="Center" />
+									<VerticalStackLayout Grid.Column="1" Spacing="4">
+										<Label Text="{Binding Title}" />
+										<ProgressBar Progress="{Binding Fraction}" ProgressColor="{StaticResource Primary}" />
+									</VerticalStackLayout>
+									<Label Grid.Column="2" Text="{Binding Count}" FontAttributes="Bold" VerticalOptions="Center" />
+								</Grid>
+							</DataTemplate>
+						</BindableLayout.ItemTemplate>
+					</VerticalStackLayout>
+				</VerticalStackLayout>
+			</Border>
+
+			<!-- AI settings -->
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="AI PROVIDER" Style="{StaticResource SectionLabel}" />
+					<Picker ItemsSource="{Binding Providers}" SelectedIndex="{Binding ProviderIndex}" />
+					<Label Text="Model / deployment" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+					<Entry Text="{Binding Model}" />
+					<Label Text="Endpoint" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+					<Entry Text="{Binding Endpoint}" Keyboard="Url" />
+					<VerticalStackLayout IsVisible="{Binding NeedsApiKey}" Spacing="8">
+						<Label Text="API key (stored in secure storage)" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+						<Entry Text="{Binding ApiKey}" IsPassword="True" />
+					</VerticalStackLayout>
+					<Button Text="Save AI settings" Command="{Binding SaveAiCommand}" Style="{StaticResource Small}"
+							BackgroundColor="{StaticResource Primary}" TextColor="White" HorizontalOptions="Start" />
+					<Label Text="AI tools (summarize, translate) arrive in a later phase and will use these settings."
+						   FontSize="12" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+				</VerticalStackLayout>
+			</Border>
+
+			<!-- Preferences & storage -->
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="10">
+					<Label Text="PREFERENCES AND STORAGE" Style="{StaticResource SectionLabel}" />
+					<HorizontalStackLayout Spacing="10">
+						<Switch IsToggled="{Binding KeepHistory}" />
+						<Label Text="Keep activity history" VerticalOptions="Center" />
+					</HorizontalStackLayout>
+					<HorizontalStackLayout Spacing="10">
+						<Switch IsToggled="{Binding AutoCleanCache}" />
+						<Label Text="Clear temporary files on launch" VerticalOptions="Center" />
+					</HorizontalStackLayout>
+					<FlexLayout Wrap="Wrap" JustifyContent="Start">
+						<Button Text="Clear cache" Command="{Binding ClearCacheCommand}" Style="{StaticResource Small}" Margin="0,0,8,8" />
+						<Button Text="Clear history" Command="{Binding ClearHistoryCommand}" Style="{StaticResource Small}" Margin="0,0,8,8" />
+						<Button Text="Delete all outputs" Command="{Binding DeleteOutputsCommand}" Style="{StaticResource Small}"
+								BackgroundColor="#EF4444" TextColor="White" Margin="0,0,8,8" />
+					</FlexLayout>
+				</VerticalStackLayout>
+			</Border>
+
+			<!-- History -->
+			<Label Text="RECENT ACTIVITY" Style="{StaticResource SectionLabel}" />
+			<Label Text="Nothing yet. Run a tool and it will show up here." IsVisible="{Binding HasNoHistory}" />
+			<VerticalStackLayout BindableLayout.ItemsSource="{Binding History}" Spacing="8" IsVisible="{Binding HasHistory}">
+				<BindableLayout.ItemTemplate>
+					<DataTemplate x:DataType="models:HistoryEntry">
+						<Border Style="{StaticResource Card}" Padding="12">
+							<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+								<Label Text="{Binding Glyph}" FontSize="26" VerticalOptions="Center" />
+								<VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+									<Label Text="{Binding ToolTitle}" FontAttributes="Bold" />
+									<Label Text="{Binding Summary}" FontSize="12" LineBreakMode="MiddleTruncation" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+									<Label Text="{Binding When}" FontSize="11" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+								</VerticalStackLayout>
+								<HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" HorizontalOptions="End" Spacing="6" IsVisible="{Binding OutputsExist}">
+									<Button Text="Preview" Style="{StaticResource Small}"
+											Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=OpenEntryCommand}"
+											CommandParameter="{Binding .}" />
+									<Button Text="Save" Style="{StaticResource Small}"
+											Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=SaveEntryCommand}"
+											CommandParameter="{Binding .}" />
+									<Button Text="Share" Style="{StaticResource Small}"
+											Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=ShareEntryCommand}"
+											CommandParameter="{Binding .}" />
+									<Button Text="✕" Style="{StaticResource Small}" WidthRequest="38" Padding="0" TextColor="#EF4444"
+											Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteEntryCommand}"
+											CommandParameter="{Binding .}" />
+								</HorizontalStackLayout>
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</BindableLayout.ItemTemplate>
+			</VerticalStackLayout>
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>

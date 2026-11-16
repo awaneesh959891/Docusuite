@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.LegalPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	Title="Privacy &amp; Legal"
+	BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+	<ContentPage.Resources>
+		<Style x:Key="Card" TargetType="Border">
+			<Setter Property="StrokeThickness" Value="1" />
+			<Setter Property="Padding" Value="18" />
+			<Setter Property="Stroke" Value="{AppThemeBinding Light=#E5E7EB, Dark=#33333C}" />
+			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark={StaticResource DarkSecondaryBackground}}" />
+			<Setter Property="StrokeShape" Value="RoundRectangle 20" />
+		</Style>
+		<Style x:Key="Heading" TargetType="Label">
+			<Setter Property="FontSize" Value="18" />
+			<Setter Property="FontAttributes" Value="Bold" />
+			<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+		</Style>
+		<Style x:Key="Body" TargetType="Label">
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="LineHeight" Value="1.35" />
+			<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+		</Style>
+	</ContentPage.Resources>
+
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="14" MaximumWidthRequest="800">
+			<VerticalStackLayout Spacing="2">
+				<Label Text="Privacy &amp; Legal" FontSize="28" FontAttributes="Bold"
+					   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+				<Label x:Name="VersionLabel" TextColor="{StaticResource Gray500}" />
+			</VerticalStackLayout>
+
+			<Border Style="{StaticResource Card}" Stroke="{StaticResource Primary}">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="Important disclaimer" Style="{StaticResource Heading}" />
+					<Label x:Name="DisclaimerLabel" Style="{StaticResource Body}" />
+				</VerticalStackLayout>
+			</Border>
+
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="Privacy overview" Style="{StaticResource Heading}" />
+					<Label x:Name="PrivacyLabel" Style="{StaticResource Body}" />
+				</VerticalStackLayout>
+			</Border>
+
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="Information handled" Style="{StaticResource Heading}" />
+					<Label x:Name="DataLabel" Style="{StaticResource Body}" />
+				</VerticalStackLayout>
+			</Border>
+
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="Storage and deletion" Style="{StaticResource Heading}" />
+					<Label x:Name="RetentionLabel" Style="{StaticResource Body}" />
+				</VerticalStackLayout>
+			</Border>
+
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="8">
+					<Label Text="Terms of use" Style="{StaticResource Heading}" />
+					<Label x:Name="TermsLabel" Style="{StaticResource Body}" />
+				</VerticalStackLayout>
+			</Border>
+
+			<Label Text="This built-in notice is a practical product disclosure, not a substitute for legal advice. Review it with qualified counsel before public distribution."
+				   FontSize="12" TextColor="{StaticResource Gray500}" Margin="4,4,4,20" />
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>

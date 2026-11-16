@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22D3EE"/><stop offset="55%" stop-color="#2563EB"/><stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+  </defs>
+  <path d="M112 48h144l82 82v222c0 20-16 36-36 36H112c-20 0-36-16-36-36V84c0-20 16-36 36-36z" fill="url(#page)"/>
+  <path d="M256 48v82c0 14 12 26 26 26h56z" fill="#C084FC"/>
+  <path d="M118 216c21 52 66 66 120 79 46 11 75 29 86 69-30-32-63-36-111-49-58-15-93-43-95-99z" fill="#67E8F9"/>
+  <path d="M154 160h120M154 195h132M154 230h91" stroke="#A5B4FC" stroke-width="13" stroke-linecap="round"/>
+  <path d="M262 313c12-18 25-25 46-26l59-2c17 0 27 13 24 30l-11 45c-3 13-15 21-28 21H230c11-29 21-51 32-68z" fill="#F43F5E"/>
+  <text x="322" y="357" text-anchor="middle" font-family="Arial,sans-serif" font-size="37" font-weight="700" fill="#fff">PDF</text>
+</svg>

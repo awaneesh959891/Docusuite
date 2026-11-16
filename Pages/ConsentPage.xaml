@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.ConsentPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	Shell.NavBarIsVisible="False">
+
+	<Grid Padding="24">
+		<Grid.Background>
+			<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+				<GradientStop Color="#512BD4" Offset="0" />
+				<GradientStop Color="#8B5CF6" Offset="0.65" />
+				<GradientStop Color="#D600AA" Offset="1" />
+			</LinearGradientBrush>
+		</Grid.Background>
+
+		<Border MaximumWidthRequest="680" MaximumHeightRequest="760" BackgroundColor="White" StrokeThickness="0" Padding="24">
+			<Border.StrokeShape><RoundRectangle CornerRadius="28" /></Border.StrokeShape>
+			<Grid RowDefinitions="Auto,*,Auto" RowSpacing="16">
+				<VerticalStackLayout Spacing="4">
+					<Label Text="Welcome to DocSuite" FontSize="28" FontAttributes="Bold" TextColor="#111827" />
+					<Label Text="Please review these important terms before continuing." TextColor="#6B7280" />
+				</VerticalStackLayout>
+
+				<ScrollView Grid.Row="1">
+					<VerticalStackLayout Spacing="16">
+						<Label Text="PRIVACY" FontSize="12" FontAttributes="Bold" TextColor="#512BD4" />
+						<Label x:Name="PrivacyLabel" TextColor="#374151" LineHeight="1.35" />
+						<Label Text="DISCLAIMER" FontSize="12" FontAttributes="Bold" TextColor="#512BD4" />
+						<Label x:Name="DisclaimerLabel" TextColor="#374151" LineHeight="1.35" />
+						<Label Text="TERMS" FontSize="12" FontAttributes="Bold" TextColor="#512BD4" />
+						<Label x:Name="TermsLabel" TextColor="#374151" LineHeight="1.35" />
+					</VerticalStackLayout>
+				</ScrollView>
+
+				<VerticalStackLayout Grid.Row="2" Spacing="10">
+					<CheckBox x:Name="AcceptCheck" CheckedChanged="OnCheckedChanged" Color="#512BD4" />
+					<Label Text="I have read and accept the Privacy Notice, Disclaimer, and Terms of Use."
+						   TextColor="#374151" Margin="38,-42,0,8" />
+					<Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+						<Button Text="Exit" Clicked="OnExit" BackgroundColor="Transparent" BorderWidth="1" BorderColor="#9CA3AF" TextColor="#374151" />
+						<Button x:Name="ContinueButton" Grid.Column="1" Text="Accept &amp; Continue" Clicked="OnContinue"
+								IsEnabled="False" BackgroundColor="#512BD4" TextColor="White" />
+					</Grid>
+				</VerticalStackLayout>
+			</Grid>
+		</Border>
+	</Grid>
+</ContentPage>

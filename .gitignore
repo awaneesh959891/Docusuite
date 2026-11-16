@@ -426,3 +426,9 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+# Build outputs / release artifacts
+artifacts/
+*.aab
+*.apk
+*.msix

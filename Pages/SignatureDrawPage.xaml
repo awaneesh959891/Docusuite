@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.SignatureDrawPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	Shell.NavBarIsVisible="False"
+	BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+	<Grid RowDefinitions="Auto,*,Auto" Padding="20" RowSpacing="16">
+		<VerticalStackLayout Spacing="2" Margin="0,24,0,0">
+			<Label Text="Draw your signature" FontSize="24" FontAttributes="Bold"
+				   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+			<Label Text="Use your finger, stylus or mouse in the box below."
+				   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+		</VerticalStackLayout>
+
+		<Border Grid.Row="1" x:Name="PadHost" StrokeThickness="2" Stroke="{StaticResource Primary}" BackgroundColor="White"
+				MaximumHeightRequest="420" VerticalOptions="Start" HeightRequest="320">
+			<Border.StrokeShape>
+				<RoundRectangle CornerRadius="20" />
+			</Border.StrokeShape>
+		</Border>
+
+		<Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="10">
+			<Button Text="Cancel" Clicked="OnCancel" BackgroundColor="Transparent" BorderWidth="1"
+					BorderColor="{StaticResource Gray400}"
+					TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+			<Button Grid.Column="1" Text="Clear" Clicked="OnClear" BackgroundColor="#EF4444" TextColor="White" />
+			<Button Grid.Column="2" Text="Done" Clicked="OnDone" BackgroundColor="{StaticResource Primary}" TextColor="White" />
+		</Grid>
+	</Grid>
+</ContentPage>

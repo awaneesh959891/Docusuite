@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="768" height="768" viewBox="0 0 768 768" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+	<linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+	  <stop offset="0%" stop-color="#22D3EE"/>
+	  <stop offset="52%" stop-color="#2563EB"/>
+	  <stop offset="100%" stop-color="#6D28D9"/>
+	</linearGradient>
+	<linearGradient id="fold" x1="0" y1="0" x2="1" y2="1">
+	  <stop offset="0%" stop-color="#E879F9"/>
+	  <stop offset="100%" stop-color="#7C3AED"/>
+	</linearGradient>
+	<linearGradient id="swoosh" x1="0" y1="0" x2="1" y2="0">
+	  <stop offset="0%" stop-color="#67E8F9"/>
+	  <stop offset="100%" stop-color="#A855F7"/>
+	</linearGradient>
+	<linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+	  <stop offset="0%" stop-color="#101A45"/>
+	  <stop offset="48%" stop-color="#1649C9"/>
+	  <stop offset="100%" stop-color="#5B21B6"/>
+	</linearGradient>
+  </defs>
+  <path d="M242 45h186l103 103v235c0 25-20 45-45 45H242c-25 0-45-20-45-45V90c0-25 20-45 45-45z" fill="url(#page)"/>
+  <path d="M428 45v103c0 17 14 31 31 31h72z" fill="url(#fold)"/>
+  <path d="M288 151c93-16 185 19 232 95 39 62 37 135 0 182-17 22-43 38-79 47 30-56 26-108-8-152-33-42-85-59-145-61z" fill="#2346E8" opacity=".8"/>
+  <path d="M205 245c20 79 80 111 164 129 63 13 113 40 127 98 4 17 4 35-1 54-22-81-91-87-167-108-79-22-126-68-123-173z" fill="url(#swoosh)"/>
+  <path d="M288 188h122M288 227h135M288 266h111" stroke="#A5B4FC" stroke-width="18" stroke-linecap="round" opacity=".9"/>
+  <path d="M442 411c15-23 32-32 58-33l79-3c22 0 35 17 31 39l-15 58c-4 16-19 27-36 27H401c14-38 27-67 41-88z" fill="#F43F5E"/>
+  <text x="505" y="468" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#FFFFFF">PDF</text>
+  <text x="384" y="608" text-anchor="middle" font-family="Arial, sans-serif" font-size="92" font-weight="800" letter-spacing="-5" fill="url(#word)">DocSuite</text>
+  <text x="384" y="653" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="500" letter-spacing="4" fill="#445A9A">Your Documents. Your Way.</text>
+  <text x="384" y="704" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="5" fill="#445A9A">VIEW  •  EDIT  •  CONVERT  •  ORGANIZE</text>
+</svg>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.ToolPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:models="clr-namespace:MauiApp.Models"
+	xmlns:vm="clr-namespace:MauiApp.PageModels"
+	x:DataType="vm:ToolViewModel"
+	Title="{Binding Tool.Title}"
+	BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+	<ContentPage.Resources>
+		<Style x:Key="Card" TargetType="Border">
+			<Setter Property="StrokeThickness" Value="1" />
+			<Setter Property="Padding" Value="16" />
+			<Setter Property="Stroke" Value="{AppThemeBinding Light=#E5E7EB, Dark=#33333C}" />
+			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark={StaticResource DarkSecondaryBackground}}" />
+			<Setter Property="StrokeShape" Value="RoundRectangle 20" />
+		</Style>
+		<Style x:Key="SectionLabel" TargetType="Label">
+			<Setter Property="FontAttributes" Value="Bold" />
+			<Setter Property="FontSize" Value="13" />
+			<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+		</Style>
+		<Style x:Key="FieldLabel" TargetType="Label" BasedOn="{StaticResource SectionLabel}">
+			<Setter Property="FontAttributes" Value="None" />
+			<Setter Property="Margin" Value="0,4,0,0" />
+		</Style>
+		<Style x:Key="MiniButton" TargetType="Button">
+			<Setter Property="WidthRequest" Value="38" />
+			<Setter Property="HeightRequest" Value="38" />
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="CornerRadius" Value="19" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" />
+			<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+		</Style>
+		<Style x:Key="SecondaryButton" TargetType="Button">
+			<Setter Property="HeightRequest" Value="42" />
+			<Setter Property="CornerRadius" Value="21" />
+			<Setter Property="Padding" Value="18,0" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray600}}" />
+			<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark=White}" />
+		</Style>
+	</ContentPage.Resources>
+
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="720">
+
+			<!-- Hero -->
+			<Border Style="{StaticResource Card}" Padding="0">
+				<Grid ColumnDefinitions="Auto,*" Padding="16" ColumnSpacing="14">
+					<Grid WidthRequest="56" HeightRequest="56">
+						<Border StrokeThickness="0" BackgroundColor="{Binding Tool.AccentColor}" Opacity="0.18">
+							<Border.StrokeShape>
+								<RoundRectangle CornerRadius="16" />
+							</Border.StrokeShape>
+						</Border>
+						<Label Text="{Binding Tool.Glyph}" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center" />
+					</Grid>
+					<VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+						<Label Text="{Binding Tool.Title}" FontSize="22" FontAttributes="Bold"
+							   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+						<Label Text="{Binding Tool.Description}" Style="{StaticResource FieldLabel}" />
+					</VerticalStackLayout>
+				</Grid>
+			</Border>
+
+			<!-- Camera (scan) -->
+			<VerticalStackLayout IsVisible="{Binding IsScan}" Spacing="6">
+				<Button Text="📷  Take a photo" Command="{Binding TakePhotoCommand}"
+						HeightRequest="60" CornerRadius="20" FontSize="17" FontAttributes="Bold"
+						BackgroundColor="{StaticResource Primary}" TextColor="White" />
+				<Label Text="Repeat for every page, then create the PDF" Style="{StaticResource FieldLabel}" HorizontalOptions="Center" />
+			</VerticalStackLayout>
+
+			<!-- Picker -->
+			<VerticalStackLayout Spacing="6">
+				<Button Text="{Binding PickLabel, StringFormat='📂  {0}'}" Command="{Binding PickFilesCommand}"
+						HeightRequest="60" CornerRadius="20" FontSize="17" FontAttributes="Bold"
+						BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray600}}"
+						TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark=White}"
+						BorderColor="{StaticResource Primary}" BorderWidth="1.5" />
+				<Label Text="Tap to browse your device" Style="{StaticResource FieldLabel}" HorizontalOptions="Center" />
+			</VerticalStackLayout>
+
+			<!-- Selected files -->
+			<VerticalStackLayout Spacing="10" IsVisible="{Binding HasFiles}">
+				<Label Text="SELECTED" Style="{StaticResource SectionLabel}" />
+				<VerticalStackLayout BindableLayout.ItemsSource="{Binding Files}" Spacing="8">
+					<BindableLayout.ItemTemplate>
+						<DataTemplate x:DataType="models:PdfDocumentItem">
+							<Border Style="{StaticResource Card}" Padding="12">
+								<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+									<Label Text="{Binding Glyph}" FontSize="28" VerticalOptions="Center" />
+									<VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+										<Label Text="{Binding FileName}" FontAttributes="Bold" LineBreakMode="MiddleTruncation"
+											   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+										<Label Text="{Binding Details}" FontSize="12" Style="{StaticResource FieldLabel}" />
+									</VerticalStackLayout>
+                                    <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" HorizontalOptions="End" Spacing="6">
+                                        <Button Text="👁" Style="{StaticResource MiniButton}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=PreviewCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        <Button Text="▲" Style="{StaticResource MiniButton}"
+												IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=IsMultiple}"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=MoveUpCommand}"
+												CommandParameter="{Binding .}" />
+										<Button Text="▼" Style="{StaticResource MiniButton}"
+												IsVisible="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=IsMultiple}"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=MoveDownCommand}"
+												CommandParameter="{Binding .}" />
+										<Button Text="✕" Style="{StaticResource MiniButton}" TextColor="#EF4444"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=RemoveCommand}"
+												CommandParameter="{Binding .}" />
+									</HorizontalStackLayout>
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</BindableLayout.ItemTemplate>
+				</VerticalStackLayout>
+			</VerticalStackLayout>
+
+			<!-- Options -->
+			<Border Style="{StaticResource Card}" IsVisible="{Binding ShowOptionsCard}">
+				<VerticalStackLayout Spacing="10">
+					<Label Text="OPTIONS" Style="{StaticResource SectionLabel}" />
+					<Picker Title="Saved presets" ItemsSource="{Binding PresetNames}" SelectedItem="{Binding SelectedPresetName}" />
+					<FlexLayout Wrap="Wrap" JustifyContent="Start">
+						<Button Text="Apply preset" Command="{Binding ApplyPresetCommand}" Margin="0,0,8,8" />
+						<Button Text="Save current options" Command="{Binding SavePresetCommand}" Margin="0,0,8,8" />
+						<Button Text="Delete preset" Command="{Binding DeletePresetCommand}" Margin="0,0,8,8" />
+					</FlexLayout>
+					<Label Text="OUTPUT FILE NAME" Style="{StaticResource SectionLabel}" />
+					<Entry Text="{Binding OutputNamePattern}" Placeholder="e.g. report_compress_20261116_001" />
+					<Label Text="Tokens: {OriginalName}, {Operation}, {Date}, {Counter}. Leave blank to keep the tool's default name. Existing files are never overwritten." Style="{StaticResource FieldLabel}" FontSize="12" />
+
+					<!-- Split -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowSplitOptions}">
+						<Label Text="Split mode" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding SplitModes}" SelectedIndex="{Binding SplitModeIndex}" />
+					</VerticalStackLayout>
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowPagesPerFile}">
+						<Label Text="Pages per file" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding PagesPerFile}" Keyboard="Numeric" />
+					</VerticalStackLayout>
+
+					<!-- Ranges -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowRanges}">
+						<Label Text="{Binding RangesLabel}" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding Ranges}" Placeholder="e.g. 1-3, 5, 8-" />
+					</VerticalStackLayout>
+
+					<!-- Rotate -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowRotation}">
+						<Label Text="Rotation" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding RotationOptions}" SelectedIndex="{Binding RotationIndex}" />
+					</VerticalStackLayout>
+
+					<!-- Images / scan -->
+					<VerticalStackLayout Spacing="8" IsVisible="{Binding ShowImageOptions}">
+						<VerticalStackLayout Spacing="4" IsVisible="{Binding IsScan}">
+							<Label Text="Filter" Style="{StaticResource FieldLabel}" />
+							<Picker ItemsSource="{Binding ScanFilters}" SelectedIndex="{Binding ScanFilterIndex}" />
+							<HorizontalStackLayout Spacing="10">
+								<Switch IsToggled="{Binding AutoCrop}" />
+								<Label Text="Auto-crop to the document edges" VerticalOptions="Center" />
+							</HorizontalStackLayout>
+						</VerticalStackLayout>
+						<Label Text="Page size" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding PageSizes}" SelectedIndex="{Binding PageSizeIndex}" />
+						<HorizontalStackLayout Spacing="10" IsVisible="{Binding ShowLandscape}">
+							<Switch IsToggled="{Binding Landscape}" />
+							<Label Text="Landscape" VerticalOptions="Center" />
+						</HorizontalStackLayout>
+						<VerticalStackLayout IsVisible="{Binding ShowMargin}">
+							<Label Text="{Binding Margin, StringFormat='Margin: {0:0} pt'}" Style="{StaticResource FieldLabel}" />
+							<Slider Minimum="0" Maximum="72" Value="{Binding Margin}" />
+						</VerticalStackLayout>
+					</VerticalStackLayout>
+
+					<!-- Compress -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowCompress}">
+						<Label Text="Compression level" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding CompressionLevels}" SelectedIndex="{Binding CompressionIndex}" />
+						<Label Text="Photos inside the PDF are downsized and re-encoded. Text and vector content stay sharp."
+							   Style="{StaticResource FieldLabel}" FontSize="12" />
+					</VerticalStackLayout>
+
+					<!-- Page numbers -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowPageNumbers}">
+						<Label Text="Position" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding NumberPositions}" SelectedIndex="{Binding NumberPositionIndex}" />
+						<Label Text="Format" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding NumberFormats}" SelectedIndex="{Binding NumberFormatIndex}" />
+						<Label Text="Start at" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding StartNumber}" Keyboard="Numeric" />
+						<Label Text="{Binding NumberFontSize, StringFormat='Font size: {0:0} pt'}" Style="{StaticResource FieldLabel}" />
+						<Slider Minimum="8" Maximum="32" Value="{Binding NumberFontSize}" />
+						<HorizontalStackLayout Spacing="10">
+							<Switch IsToggled="{Binding SkipFirstPage}" />
+							<Label Text="Don't number the first page" VerticalOptions="Center" />
+						</HorizontalStackLayout>
+					</VerticalStackLayout>
+
+					<!-- Watermark -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowWatermark}">
+						<Label Text="Text (ignored when a logo is chosen)" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding WatermarkText}" Placeholder="e.g. CONFIDENTIAL" />
+						<Label Text="Logo image (optional)" Style="{StaticResource FieldLabel}" />
+						<HorizontalStackLayout Spacing="10">
+							<Button Text="Choose logo" Style="{StaticResource SecondaryButton}" Command="{Binding PickLogoCommand}" />
+							<Button Text="Remove" Style="{StaticResource SecondaryButton}" Command="{Binding RemoveLogoCommand}" IsVisible="{Binding HasLogo}" />
+							<Label Text="{Binding LogoLabel}" VerticalOptions="Center" Style="{StaticResource FieldLabel}" LineBreakMode="MiddleTruncation" />
+						</HorizontalStackLayout>
+						<Label Text="{Binding WatermarkOpacity, StringFormat='Opacity: {0:0}%'}" Style="{StaticResource FieldLabel}" />
+						<Slider Minimum="5" Maximum="100" Value="{Binding WatermarkOpacity}" />
+						<Label Text="{Binding WatermarkRotation, StringFormat='Rotation: {0:0}°'}" Style="{StaticResource FieldLabel}" />
+						<Slider Minimum="-90" Maximum="90" Value="{Binding WatermarkRotation}" />
+						<Label Text="{Binding WatermarkFontSize, StringFormat='Text size: {0:0} pt'}" Style="{StaticResource FieldLabel}" />
+						<Slider Minimum="12" Maximum="160" Value="{Binding WatermarkFontSize}" />
+						<HorizontalStackLayout Spacing="10">
+							<Switch IsToggled="{Binding WatermarkTile}" />
+							<Label Text="Tile across the page" VerticalOptions="Center" />
+						</HorizontalStackLayout>
+					</VerticalStackLayout>
+
+					<!-- Protect -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowProtect}">
+						<Label Text="Password to open the PDF" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding Password}" IsPassword="True" Placeholder="Password" />
+						<Label Text="Confirm password" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding ConfirmPassword}" IsPassword="True" Placeholder="Repeat password" />
+						<Label Text="Owner password for changing permissions (optional)" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding OwnerPassword}" IsPassword="True" Placeholder="Optional" />
+						<Label Text="Encryption" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding Strengths}" SelectedIndex="{Binding StrengthIndex}" />
+						<Label Text="Allow viewers to…" Style="{StaticResource FieldLabel}" />
+						<HorizontalStackLayout Spacing="10"><Switch IsToggled="{Binding AllowPrint}" /><Label Text="Print" VerticalOptions="Center" /></HorizontalStackLayout>
+						<HorizontalStackLayout Spacing="10"><Switch IsToggled="{Binding AllowCopy}" /><Label Text="Copy text and images" VerticalOptions="Center" /></HorizontalStackLayout>
+						<HorizontalStackLayout Spacing="10"><Switch IsToggled="{Binding AllowEdit}" /><Label Text="Edit and reorder pages" VerticalOptions="Center" /></HorizontalStackLayout>
+						<HorizontalStackLayout Spacing="10"><Switch IsToggled="{Binding AllowAnnotate}" /><Label Text="Annotate and fill forms" VerticalOptions="Center" /></HorizontalStackLayout>
+					</VerticalStackLayout>
+
+					<!-- Unlock -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowUnlock}">
+						<Label Text="Password" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding Password}" IsPassword="True" Placeholder="Enter the PDF's password" />
+						<Label Text="Only unlock files you are authorized to open." Style="{StaticResource FieldLabel}" FontSize="12" />
+					</VerticalStackLayout>
+
+					<!-- Sign -->
+					<VerticalStackLayout Spacing="6" IsVisible="{Binding ShowSign}">
+						<Label Text="Signature type" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding SignModes}" SelectedIndex="{Binding SignModeIndex}" />
+
+						<VerticalStackLayout IsVisible="{Binding ShowDrawMode}">
+							<Button Text="✍️  Open signature pad" Style="{StaticResource SecondaryButton}" Command="{Binding DrawSignatureCommand}" HorizontalOptions="Start" />
+						</VerticalStackLayout>
+						<VerticalStackLayout IsVisible="{Binding ShowTypeMode}">
+							<Entry Text="{Binding TypedSignature}" Placeholder="Type your name" />
+						</VerticalStackLayout>
+						<VerticalStackLayout IsVisible="{Binding ShowUploadMode}" Spacing="4">
+							<HorizontalStackLayout Spacing="10">
+								<Button Text="Choose image" Style="{StaticResource SecondaryButton}" Command="{Binding PickSignatureImageCommand}" />
+								<Label Text="{Binding UploadLabel}" VerticalOptions="Center" Style="{StaticResource FieldLabel}" />
+							</HorizontalStackLayout>
+							<Label Text="Tip: sign on white paper and photograph it. The paper is made transparent automatically."
+								   Style="{StaticResource FieldLabel}" FontSize="12" />
+						</VerticalStackLayout>
+
+						<Label Text="Ink color" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding InkColors}" SelectedIndex="{Binding InkIndex}" />
+
+						<Border IsVisible="{Binding HasSignaturePreview}" BackgroundColor="White" StrokeThickness="1" Stroke="#E5E7EB" Padding="12" HeightRequest="110">
+							<Border.StrokeShape>
+								<RoundRectangle CornerRadius="12" />
+							</Border.StrokeShape>
+							<Image Source="{Binding SignaturePreview}" Aspect="AspectFit" />
+						</Border>
+						<Button Text="Clear signature" Style="{StaticResource SecondaryButton}" Command="{Binding ClearSignatureCommand}"
+								IsVisible="{Binding HasSignaturePreview}" HorizontalOptions="Start" />
+
+						<Label Text="Signer name for the audit line (optional)" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding SignerName}" Placeholder="e.g. Jane Doe" />
+						<Label Text="Position" Style="{StaticResource FieldLabel}" />
+						<Picker ItemsSource="{Binding SignPositions}" SelectedIndex="{Binding SignPositionIndex}" />
+						<Label Text="Page (empty = last page)" Style="{StaticResource FieldLabel}" />
+						<Entry Text="{Binding SignPage}" Keyboard="Numeric" Placeholder="Last page" />
+						<Label Text="{Binding SignWidth, StringFormat='Signature width: {0:0}% of page'}" Style="{StaticResource FieldLabel}" />
+						<Slider Minimum="10" Maximum="70" Value="{Binding SignWidth}" />
+						<HorizontalStackLayout Spacing="10"><Switch IsToggled="{Binding AddTimestamp}" /><Label Text="Add date and time stamp" VerticalOptions="Center" /></HorizontalStackLayout>
+						<HorizontalStackLayout Spacing="10"><Switch IsToggled="{Binding SignAllPages}" /><Label Text="Sign every page" VerticalOptions="Center" /></HorizontalStackLayout>
+					</VerticalStackLayout>
+				</VerticalStackLayout>
+			</Border>
+
+			<Button Text="{Binding RunLabel}" Command="{Binding RunCommand}" IsVisible="{Binding HasFiles}"
+					HeightRequest="54" CornerRadius="27" FontSize="17" FontAttributes="Bold"
+					BackgroundColor="{StaticResource Primary}" TextColor="White" />
+
+			<ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Primary}" />
+			<Label Text="{Binding Status}" HorizontalOptions="Center" HorizontalTextAlignment="Center"
+				   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
+
+			<!-- Results -->
+			<VerticalStackLayout Spacing="10" IsVisible="{Binding HasResults}">
+				<Label Text="RESULT" Style="{StaticResource SectionLabel}" />
+				<VerticalStackLayout BindableLayout.ItemsSource="{Binding Results}" Spacing="8">
+					<BindableLayout.ItemTemplate>
+						<DataTemplate x:DataType="models:PdfDocumentItem">
+							<Border Style="{StaticResource Card}" Padding="12" Stroke="#10B981">
+								<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+									<Label Text="✅" FontSize="26" VerticalOptions="Center" />
+									<VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+										<Label Text="{Binding FileName}" FontAttributes="Bold" LineBreakMode="MiddleTruncation"
+											   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+										<Label Text="{Binding Details}" FontSize="12" Style="{StaticResource FieldLabel}" />
+									</VerticalStackLayout>
+									<FlexLayout Grid.Row="1" Grid.ColumnSpan="2" Wrap="Wrap" JustifyContent="End">
+										<Button Text="Preview" HeightRequest="38" Padding="14,0" CornerRadius="19" FontSize="13" Margin="0,0,6,6"
+												BackgroundColor="{StaticResource Primary}" TextColor="White"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=PreviewCommand}"
+												CommandParameter="{Binding .}" />
+										<Button Text="Open" HeightRequest="38" Padding="14,0" CornerRadius="19" FontSize="13" Margin="0,0,6,6"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=OpenResultCommand}"
+												CommandParameter="{Binding .}" />
+										<Button Text="Share" HeightRequest="38" Padding="14,0" CornerRadius="19" FontSize="13" Margin="0,0,6,6"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=ShareCommand}"
+												CommandParameter="{Binding .}" />
+										<Button Text="Save" HeightRequest="38" Padding="14,0" CornerRadius="19" FontSize="13" Margin="0,0,0,6"
+												BackgroundColor="#10B981" TextColor="White"
+												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ToolViewModel}}, Path=SaveCommand}"
+												CommandParameter="{Binding .}" />
+									</FlexLayout>
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</BindableLayout.ItemTemplate>
+				</VerticalStackLayout>
+			</VerticalStackLayout>
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>

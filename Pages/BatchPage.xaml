@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.BatchPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:models="clr-namespace:MauiApp.Models"
+	xmlns:vm="clr-namespace:MauiApp.PageModels"
+	x:DataType="vm:BatchViewModel"
+	Title="Batch processing"
+	BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+	<ScrollView>
+		<VerticalStackLayout Padding="18" Spacing="12" MaximumWidthRequest="900">
+			<Label Text="Batch processing" FontSize="28" FontAttributes="Bold"
+				   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+			<Label Text="Process a queue of PDFs locally. Files are not uploaded." TextColor="{StaticResource Gray500}" />
+
+			<Picker Title="Operation" ItemsSource="{Binding OperationOptions}" SelectedIndex="{Binding OperationIndex}" />
+			<Picker Title="Compression level" ItemsSource="{Binding CompressionOptions}" SelectedIndex="{Binding CompressionIndex}" IsVisible="{Binding NeedsCompression}" />
+			<Entry Placeholder="Watermark text" Text="{Binding WatermarkText}" IsVisible="{Binding NeedsWatermark}" />
+			<Entry Placeholder="PDF password" Text="{Binding Password}" IsPassword="True" IsVisible="{Binding NeedsPassword}" />
+			<Entry Placeholder="e.g. report_compress_20261116_001" Text="{Binding OutputNamePattern}" />
+			<Label Text="Output-name tokens: {OriginalName}, {Operation}, {Date}, {Counter}. Leave blank for the tool's default name." FontSize="12" TextColor="{StaticResource Gray500}" />
+
+			<HorizontalStackLayout Spacing="8">
+				<Button Text="＋ Add PDFs" Command="{Binding AddFilesCommand}" />
+				<Button Text="Process queue" Command="{Binding ProcessCommand}" IsEnabled="{Binding IsNotBusy}" BackgroundColor="{StaticResource Primary}" TextColor="White" />
+				<Button Text="Cancel" Command="{Binding CancelCommand}" IsEnabled="{Binding IsBusy}" />
+				<Button Text="Retry failed" Command="{Binding RetryFailedCommand}" IsVisible="{Binding HasFailed}" IsEnabled="{Binding IsNotBusy}" />
+			</HorizontalStackLayout>
+			<ProgressBar Progress="{Binding Progress}" ProgressColor="{StaticResource Primary}" />
+			<Label Text="{Binding Status}" TextColor="{StaticResource Primary}" />
+
+			<VerticalStackLayout BindableLayout.ItemsSource="{Binding Queue}" Spacing="8">
+				<BindableLayout.ItemTemplate>
+					<DataTemplate x:DataType="models:BatchQueueItem">
+						<Border StrokeThickness="1" Padding="12"
+								Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#33333C}"
+								BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource DarkSecondaryBackground}}">
+							<Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+							<Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+								<VerticalStackLayout>
+									<Label Text="{Binding FileName}" FontAttributes="Bold" LineBreakMode="MiddleTruncation" />
+									<Label Text="{Binding QueueStatus}" FontSize="12" TextColor="{StaticResource Gray500}" />
+								</VerticalStackLayout>
+								<Button Grid.Column="1" Text="Open result" IsVisible="{Binding HasOutput}" HeightRequest="36"
+										Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BatchViewModel}}, Path=OpenOutputCommand}"
+										CommandParameter="{Binding .}" />
+								<Button Grid.Column="2" Text="Remove" IsEnabled="{Binding CanRemove}" HeightRequest="36"
+										Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BatchViewModel}}, Path=RemoveCommand}"
+										CommandParameter="{Binding .}" />
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</BindableLayout.ItemTemplate>
+			</VerticalStackLayout>
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>

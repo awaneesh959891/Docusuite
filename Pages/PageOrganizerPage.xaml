@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.PageOrganizerPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:models="clr-namespace:MauiApp.Models"
+	xmlns:vm="clr-namespace:MauiApp.PageModels"
+	x:DataType="vm:PageOrganizerViewModel"
+	Title="Edit pages"
+	BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+	<Grid RowDefinitions="Auto,Auto,*,Auto" Padding="14" RowSpacing="10">
+		<Grid ColumnDefinitions="*,Auto">
+			<Label Text="{Binding Title}" FontSize="20" FontAttributes="Bold" LineBreakMode="MiddleTruncation" VerticalOptions="Center" />
+			<Button Grid.Column="1" Text="Close" Clicked="OnClose" HeightRequest="38" />
+		</Grid>
+		<FlexLayout Grid.Row="1" Wrap="Wrap" JustifyContent="Start" AlignItems="Center">
+			<Button Text="Undo" Command="{Binding UndoCommand}" IsEnabled="{Binding CanUndo}" Margin="0,0,6,6" />
+			<Button Text="Redo" Command="{Binding RedoCommand}" IsEnabled="{Binding CanRedo}" Margin="0,0,6,6" />
+			<Button Text="Reverse order" Command="{Binding ReverseOrderCommand}" IsEnabled="{Binding IsNotBusy}" Margin="0,0,6,6" />
+			<Button Text="Rotate selected" Command="{Binding RotateSelectedCommand}" IsEnabled="{Binding HasSelection}" Margin="0,0,6,6" />
+			<Button Text="Duplicate" Command="{Binding DuplicateSelectedCommand}" IsEnabled="{Binding HasSelection}" Margin="0,0,6,6" />
+			<Button Text="Delete" Command="{Binding DeleteSelectedCommand}" IsEnabled="{Binding HasSelection}" BackgroundColor="#EF4444" TextColor="White" Margin="0,0,6,6" />
+		</FlexLayout>
+
+		<CollectionView Grid.Row="2" ItemsSource="{Binding Pages}" SelectionMode="None">
+			<CollectionView.ItemsLayout>
+				<GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+			</CollectionView.ItemsLayout>
+			<CollectionView.ItemTemplate>
+				<DataTemplate x:DataType="models:EditablePdfPage">
+					<Border StrokeThickness="1" Padding="10"
+							Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#33333C}"
+							BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource DarkSecondaryBackground}}">
+						<Border.GestureRecognizers>
+							<DragGestureRecognizer CanDrag="True" DragStarting="OnPageDragStarting" />
+							<DropGestureRecognizer AllowDrop="True" Drop="OnPageDrop" />
+						</Border.GestureRecognizers>
+						<Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+						<VerticalStackLayout Spacing="6">
+							<Image Source="{Binding ThumbnailPath}" HeightRequest="190" Aspect="AspectFit" />
+							<Grid ColumnDefinitions="Auto,*,Auto">
+								<CheckBox IsChecked="{Binding IsSelected}" />
+								<Label Grid.Column="1" Text="{Binding PageNumber, StringFormat='Page {0}'}" VerticalOptions="Center" FontAttributes="Bold" />
+								<Label Grid.Column="2" Text="{Binding Rotation, StringFormat='↻ {0}°'}" VerticalOptions="Center" FontSize="12" />
+							</Grid>
+							<Grid ColumnDefinitions="*,*" ColumnSpacing="6">
+								<Button Text="↑" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PageOrganizerViewModel}}, Path=MoveUpCommand}"
+										CommandParameter="{Binding .}" HeightRequest="36" />
+								<Button Grid.Column="1" Text="↓" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PageOrganizerViewModel}}, Path=MoveDownCommand}"
+										CommandParameter="{Binding .}" HeightRequest="36" />
+							</Grid>
+						</VerticalStackLayout>
+					</Border>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+
+		<Grid Grid.Row="3" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" ColumnSpacing="12" RowSpacing="6">
+			<Label Text="{Binding Status}" VerticalOptions="Center" FontSize="12" />
+			<Button Grid.Column="1" Text="Save as copy" Command="{Binding SaveCopyCommand}" IsEnabled="{Binding IsNotBusy}"
+					BackgroundColor="{StaticResource Primary}" TextColor="White" CornerRadius="20" />
+			<HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="8" IsVisible="{Binding HasOutput}">
+				<Button Text="Preview" Command="{Binding PreviewOutputCommand}" HeightRequest="38" />
+				<Button Text="Open with…" Command="{Binding OpenOutputCommand}" HeightRequest="38" />
+				<Button Text="Share" Command="{Binding ShareOutputCommand}" HeightRequest="38" />
+			</HorizontalStackLayout>
+		</Grid>
+	</Grid>
+</ContentPage>

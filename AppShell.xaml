@@ -1,0 +1,121 @@
+<Shell
+    x:Class="MauiApp.AppShell"
+    xmlns:pages="clr-namespace:MauiApp.Pages"
+    Shell.FlyoutBehavior="Flyout"
+    Title="DocSuite">
+
+    <ShellContent
+        Title="PDF Tools"
+        Icon="{StaticResource IconDashboard}"
+        ContentTemplate="{DataTemplate pages:HomePage}"
+        Route="home"
+        SemanticProperties.Description="PDF Tools"
+        SemanticProperties.Hint="Navigate to PDF tools"/>
+
+    <ShellContent
+        Title="My Documents"
+        Icon="{StaticResource IconProjects}"
+        ContentTemplate="{DataTemplate pages:DocumentsPage}"
+        Route="documents"
+        SemanticProperties.Description="My documents workspace"
+        SemanticProperties.Hint="Open my documents workspace"/>
+
+    <ShellContent
+        Title="Offline &amp; Privacy"
+        Icon="{StaticResource IconMeta}"
+        ContentTemplate="{DataTemplate pages:PrivacyPage}"
+        Route="privacy"
+        SemanticProperties.Description="Offline processing and privacy controls"
+        SemanticProperties.Hint="View local storage and privacy settings"/>
+
+    <ShellContent
+        Title="Batch Processing"
+        Icon="{StaticResource IconProjects}"
+        ContentTemplate="{DataTemplate pages:BatchPage}"
+        Route="batch"
+        SemanticProperties.Description="Batch PDF processing"
+        SemanticProperties.Hint="Process multiple PDFs"/>
+
+    <ShellContent
+        x:Name="AdminItem"
+        Title="Admin"
+        Icon="{StaticResource IconMeta}"
+        ContentTemplate="{DataTemplate pages:AdminPage}"
+        Route="admin"
+        SemanticProperties.Description="Admin"
+        SemanticProperties.Hint="Navigate to admin"/>
+
+    <ShellContent
+        x:Name="FeaturesItem"
+        Title="Feature Control"
+        Icon="{StaticResource IconProjects}"
+        ContentTemplate="{DataTemplate pages:FeaturesPage}"
+        Route="features"
+        SemanticProperties.Description="Feature control"
+        SemanticProperties.Hint="Navigate to feature control"/>
+
+    <ShellContent
+        Title="Privacy &amp; Legal"
+        Icon="{StaticResource IconMeta}"
+        ContentTemplate="{DataTemplate pages:LegalPage}"
+        Route="legal"
+        SemanticProperties.Description="Privacy and legal information"
+        SemanticProperties.Hint="Open privacy and legal information"/>
+
+    <ShellContent
+        x:Name="DashboardItem"
+        Title="Dashboard"
+        Icon="{StaticResource IconDashboard}"
+        ContentTemplate="{DataTemplate pages:MainPage}"
+        Route="main"
+        SemanticProperties.Description="Dashboard"
+        SemanticProperties.Hint="Navigate to dashboard"/>
+
+    <ShellContent
+        x:Name="ProjectsItem"
+        Title="Projects"
+        Icon="{StaticResource IconProjects}"
+        ContentTemplate="{DataTemplate pages:ProjectListPage}"
+        Route="projects"
+        SemanticProperties.Description="Projects"
+        SemanticProperties.Hint="Navigate to projects"/>
+
+    <ShellContent
+        x:Name="ManageItem"
+        Title="Manage Meta"
+        Icon="{StaticResource IconMeta}"
+        ContentTemplate="{DataTemplate pages:ManageMetaPage}"
+        Route="manage"
+        SemanticProperties.Description="Manage Meta"
+        SemanticProperties.Hint="Navigate to manage meta"/>
+
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="#512BD4" Padding="20,44,20,18">
+            <HorizontalStackLayout Spacing="14">
+                <Border WidthRequest="56" HeightRequest="56" StrokeThickness="0" BackgroundColor="#1AFFFFFF" Padding="8">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16" />
+                    </Border.StrokeShape>
+                    <Image Source="docsuite_logo.svg" Aspect="AspectFit" />
+                </Border>
+                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                    <Label Text="DocSuite" FontSize="24" FontAttributes="Bold" TextColor="White" />
+                    <Label Text="Your documents. Your way." FontSize="13" TextColor="#E6DFFF" />
+                    <Label Text="Offline-first PDF workspace" FontSize="12" TextColor="#D8CCFF" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <VerticalStackLayout Padding="15" Spacing="10">
+            <Label x:Name="UserLabel" HorizontalOptions="Center" FontSize="13" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button x:Name="LightButton" Text="☀ Light" Clicked="OnLightClicked" HeightRequest="40" CornerRadius="20" FontSize="13" Padding="4,0" />
+                <Button x:Name="DarkButton" Grid.Column="1" Text="🌙 Dark" Clicked="OnDarkClicked" HeightRequest="40" CornerRadius="20" FontSize="13" Padding="4,0" />
+            </Grid>
+            <Button Text="Sign out" Clicked="OnSignOut" HeightRequest="40" CornerRadius="20" FontSize="13" />
+        </VerticalStackLayout>
+    </Shell.FlyoutFooter>
+
+</Shell>

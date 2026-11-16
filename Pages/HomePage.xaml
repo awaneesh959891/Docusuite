@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="MauiApp.Pages.HomePage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:models="clr-namespace:MauiApp.Models"
+	xmlns:vm="clr-namespace:MauiApp.PageModels"
+	x:DataType="vm:HomeViewModel"
+	Shell.NavBarIsVisible="False"
+	BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+
+	<Grid RowDefinitions="Auto,Auto,*">
+		<Grid.GestureRecognizers>
+			<SwipeGestureRecognizer Direction="Right" Swiped="OnSwipedRight" Threshold="60" />
+		</Grid.GestureRecognizers>
+
+		<Grid Padding="24,48,24,28" RowSpacing="16">
+			<Grid.Background>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+					<GradientStop Color="#512BD4" Offset="0.0" />
+					<GradientStop Color="#8B5CF6" Offset="0.6" />
+					<GradientStop Color="#D600AA" Offset="1.0" />
+				</LinearGradientBrush>
+			</Grid.Background>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+
+			<Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+				<Button Text="☰" FontSize="22" WidthRequest="48" HeightRequest="48" Padding="0" CornerRadius="24"
+						BackgroundColor="#33FFFFFF" TextColor="White" VerticalOptions="Start"
+						Clicked="OnMenuClicked"
+						SemanticProperties.Description="Open menu" />
+				<VerticalStackLayout Grid.Column="1" Spacing="2">
+					<Label Text="{Binding Greeting}" FontSize="26" FontAttributes="Bold" TextColor="White" LineBreakMode="TailTruncation" />
+					<Label Text="Your documents. Your way. Offline-first." FontSize="14" TextColor="#E6DFFF" />
+				</VerticalStackLayout>
+				<Image Grid.Column="2" Source="docsuite_logo.svg" WidthRequest="52" HeightRequest="52" Aspect="AspectFit" />
+			</Grid>
+
+			<Border Grid.Row="1" IsVisible="{Binding HasAnnouncement}" StrokeThickness="0" BackgroundColor="#33FFFFFF" Padding="14,10">
+				<Border.StrokeShape>
+					<RoundRectangle CornerRadius="14" />
+				</Border.StrokeShape>
+				<Label Text="{Binding Announcement, StringFormat='📢  {0}'}" TextColor="White" FontSize="13" />
+			</Border>
+
+			<Border Grid.Row="2" StrokeThickness="0" BackgroundColor="White" Padding="16,0" HeightRequest="48">
+				<Border.StrokeShape>
+					<RoundRectangle CornerRadius="24" />
+				</Border.StrokeShape>
+				<Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+					<Label Text="🔍" VerticalOptions="Center" />
+					<Entry Grid.Column="1" Text="{Binding SearchText}" Placeholder="Search tools (merge, compress, sign…)"
+						   TextColor="#212121" PlaceholderColor="#919191" BackgroundColor="Transparent"
+						   VerticalOptions="Center" ClearButtonVisibility="WhileEditing" />
+				</Grid>
+			</Border>
+		</Grid>
+
+		<ScrollView Grid.Row="1" Orientation="Horizontal" Margin="12,10,12,0">
+			<HorizontalStackLayout Spacing="10">
+				<Button Text="📁 My Documents" Command="{Binding OpenDocumentsCommand}" HeightRequest="42" CornerRadius="21" />
+				<Button Text="📚 Batch" Command="{Binding OpenBatchCommand}" HeightRequest="42" CornerRadius="21" />
+				<Button Text="📷 Scan" Command="{Binding QuickScanCommand}" HeightRequest="42" CornerRadius="21" />
+				<Button Text="🔗 Merge" Command="{Binding QuickMergeCommand}" HeightRequest="42" CornerRadius="21" />
+				<Button Text="🗜️ Compress" Command="{Binding QuickCompressCommand}" HeightRequest="42" CornerRadius="21" />
+				<Button Text="🖋️ Sign" Command="{Binding QuickSignCommand}" HeightRequest="42" CornerRadius="21" />
+				<Button Text="🖼️ Image to PDF" Command="{Binding QuickImageToPdfCommand}" HeightRequest="42" CornerRadius="21" />
+			</HorizontalStackLayout>
+		</ScrollView>
+
+		<CollectionView Grid.Row="2" x:Name="ToolsView" ItemsSource="{Binding Groups}" IsGrouped="True"
+						SelectionMode="None" Margin="12,8,12,0">
+			<CollectionView.ItemsLayout>
+				<GridItemsLayout x:Name="ToolsLayout" Orientation="Vertical" Span="2"
+								 HorizontalItemSpacing="12" VerticalItemSpacing="12" />
+			</CollectionView.ItemsLayout>
+
+			<CollectionView.GroupHeaderTemplate>
+				<DataTemplate x:DataType="models:PdfToolGroup">
+					<Label Text="{Binding Name}" FontSize="20" FontAttributes="Bold" Margin="6,20,0,4"
+						   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+				</DataTemplate>
+			</CollectionView.GroupHeaderTemplate>
+
+			<CollectionView.ItemTemplate>
+				<DataTemplate x:DataType="models:ToolCard">
+					<Border StrokeThickness="1" Padding="14" HeightRequest="132"
+							Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#33333C}"
+							BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource DarkSecondaryBackground}}"
+							Opacity="{Binding CardOpacity}">
+						<Border.StrokeShape>
+							<RoundRectangle CornerRadius="20" />
+						</Border.StrokeShape>
+						<Border.Shadow>
+							<Shadow Brush="Black" Opacity="0.08" Radius="12" Offset="0,4" />
+						</Border.Shadow>
+						<Border.GestureRecognizers>
+							<TapGestureRecognizer
+								Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=OpenToolCommand}"
+								CommandParameter="{Binding .}" />
+						</Border.GestureRecognizers>
+
+						<Grid RowDefinitions="Auto,*" RowSpacing="10">
+							<Grid HorizontalOptions="Start" WidthRequest="46" HeightRequest="46">
+								<Border StrokeThickness="0" BackgroundColor="{Binding AccentColor}" Opacity="0.18">
+									<Border.StrokeShape>
+										<RoundRectangle CornerRadius="14" />
+									</Border.StrokeShape>
+								</Border>
+								<Label Text="{Binding Glyph}" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center" />
+							</Grid>
+							<VerticalStackLayout Grid.Row="1" Spacing="2" VerticalOptions="End">
+								<Label Text="{Binding Title}" FontSize="15" FontAttributes="Bold" LineBreakMode="TailTruncation"
+									   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
+								<Label Text="{Binding Description}" FontSize="12" MaxLines="2" LineBreakMode="TailTruncation"
+									   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+							</VerticalStackLayout>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+
+			<CollectionView.Footer>
+				<BoxView HeightRequest="24" Color="Transparent" />
+			</CollectionView.Footer>
+		</CollectionView>
+	</Grid>
+</ContentPage>

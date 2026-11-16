@@ -1,0 +1,14 @@
+DOCSUITE TERMS AND DISCLAIMER
+Version 1.0 — November 13, 2026
+
+DocSuite is a document utility and does not provide legal, compliance, archival, identity-verification, or professional advice.
+
+Always keep a backup before editing a document. Results can vary with malformed, encrypted, scanned, or unusually structured files. Verify every output before relying on it.
+
+A visual signature created by DocSuite is an image stamp and is not an X.509 cryptographic digital signature. Use unlock, redaction, signing, and conversion features only on documents you own or are authorized to process.
+
+You are responsible for confirming permission to process each document. Do not use DocSuite to bypass access controls, infringe copyright, impersonate another person, or process unlawful content.
+
+The software is provided without warranties to the maximum extent permitted by applicable law. The developer is not liable for lost files, lost profits, compliance failures, or indirect damages arising from use of the app.
+
+This text is a practical product disclosure and is not a substitute for legal advice. Review it with qualified counsel before public or commercial distribution.

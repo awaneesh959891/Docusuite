@@ -1,0 +1,20 @@
+DOCSUITE PRIVACY NOTICE
+Version 1.0 — November 13, 2026
+
+DocSuite is designed for local processing. Selected documents, generated files, local accounts, settings, and activity history remain on this device unless you explicitly save, share, or open them with another application.
+
+DATA HANDLED
+DocSuite may handle files you select or scan, generated PDFs, file names, tool usage history, local account email and display name, salted password hashes, app settings, and optional AI provider credentials. AI API keys are stored in operating-system secure storage.
+
+PERMISSIONS
+Camera access is used only when you choose Scan to PDF. File access is used only for files you select or destinations you choose.
+
+SHARING AND THIRD PARTIES
+Saving, sharing, or opening a file can create a copy or grant access outside DocSuite. Third-party applications and cloud services apply their own privacy policies. Current AI settings do not send documents by themselves. If AI features are enabled in a future release, data sent to a configured provider will be governed by that provider's terms.
+
+RETENTION AND DELETION
+Generated files and history remain until you delete them from Admin, remove the app, or clear application data. Temporary files can be cleared automatically on launch or manually from Admin. Deletion in DocSuite cannot remove copies stored by other applications or services.
+
+DocSuite contains no built-in advertising or analytics SDK and does not sell personal data. Accounts and admin settings in this build are local to each device and are not synchronized to a server.
+
+This notice must be reviewed by qualified counsel before public or commercial distribution.
