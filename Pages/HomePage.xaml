@@ -17,9 +17,9 @@
 		<Grid Padding="24,48,24,28" RowSpacing="16">
 			<Grid.Background>
 				<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-					<GradientStop Color="#512BD4" Offset="0.0" />
-					<GradientStop Color="#8B5CF6" Offset="0.6" />
-					<GradientStop Color="#D600AA" Offset="1.0" />
+					<GradientStop Color="#FF3366" Offset="0.0" />
+					<GradientStop Color="#C21F4B" Offset="0.6" />
+					<GradientStop Color="#3D1420" Offset="1.0" />
 				</LinearGradientBrush>
 			</Grid.Background>
 			<Grid.RowDefinitions>
@@ -35,7 +35,7 @@
 						SemanticProperties.Description="Open menu" />
 				<VerticalStackLayout Grid.Column="1" Spacing="2">
 					<Label Text="{Binding Greeting}" FontSize="26" FontAttributes="Bold" TextColor="White" LineBreakMode="TailTruncation" />
-					<Label Text="Your documents. Your way. Offline-first." FontSize="14" TextColor="#E6DFFF" />
+					<Label Text="Your documents. Your way. Offline-first." FontSize="14" TextColor="#FFE4EA" />
 				</VerticalStackLayout>
 				<Image Grid.Column="2" Source="docsuite_logo.svg" WidthRequest="52" HeightRequest="52" Aspect="AspectFit" />
 			</Grid>

@@ -1,7 +1,8 @@
 <Shell
     x:Class="MauiApp.AppShell"
     xmlns:pages="clr-namespace:MauiApp.Pages"
-    Shell.FlyoutBehavior="Flyout"
+    Shell.FlyoutBehavior="{OnPlatform Default=Flyout, WinUI=Locked, MacCatalyst=Locked}"
+        Shell.FlyoutBackgroundColor="{StaticResource SurfaceContainerLowest}"
     Title="DocSuite">
 
     <ShellContent
@@ -90,7 +91,7 @@
         SemanticProperties.Hint="Navigate to manage meta"/>
 
     <Shell.FlyoutHeader>
-        <Grid BackgroundColor="#512BD4" Padding="20,44,20,18">
+        <Grid BackgroundColor="{StaticResource SurfaceContainerLow}" Padding="20,44,20,18">
             <HorizontalStackLayout Spacing="14">
                 <Border WidthRequest="56" HeightRequest="56" StrokeThickness="0" BackgroundColor="#1AFFFFFF" Padding="8">
                     <Border.StrokeShape>
@@ -99,9 +100,12 @@
                     <Image Source="docsuite_logo.svg" Aspect="AspectFit" />
                 </Border>
                 <VerticalStackLayout Spacing="2" VerticalOptions="Center">
-                    <Label Text="DocSuite" FontSize="24" FontAttributes="Bold" TextColor="White" />
-                    <Label Text="Your documents. Your way." FontSize="13" TextColor="#E6DFFF" />
-                    <Label Text="Offline-first PDF workspace" FontSize="12" TextColor="#D8CCFF" />
+                    <HorizontalStackLayout Spacing="6">
+                                            <Label Text="DocSuite" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
+                                            <Label Text="PRO" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Primary}" VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                        <Label Text="Your documents. Your way." FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                        <Label Text="Offline-first PDF workspace" FontSize="12" TextColor="{StaticResource TextMuted}" />
                 </VerticalStackLayout>
             </HorizontalStackLayout>
         </Grid>

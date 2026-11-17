@@ -8,9 +8,9 @@
 	<Grid Padding="24">
 		<Grid.Background>
 			<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-				<GradientStop Color="#512BD4" Offset="0" />
-				<GradientStop Color="#8B5CF6" Offset="0.65" />
-				<GradientStop Color="#D600AA" Offset="1" />
+				<GradientStop Color="#FF3366" Offset="0" />
+				<GradientStop Color="#C21F4B" Offset="0.65" />
+				<GradientStop Color="#3D1420" Offset="1" />
 			</LinearGradientBrush>
 		</Grid.Background>
 
@@ -24,23 +24,23 @@
 
 				<ScrollView Grid.Row="1">
 					<VerticalStackLayout Spacing="16">
-						<Label Text="PRIVACY" FontSize="12" FontAttributes="Bold" TextColor="#512BD4" />
+						<Label Text="PRIVACY" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
 						<Label x:Name="PrivacyLabel" TextColor="#374151" LineHeight="1.35" />
-						<Label Text="DISCLAIMER" FontSize="12" FontAttributes="Bold" TextColor="#512BD4" />
+						<Label Text="DISCLAIMER" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
 						<Label x:Name="DisclaimerLabel" TextColor="#374151" LineHeight="1.35" />
-						<Label Text="TERMS" FontSize="12" FontAttributes="Bold" TextColor="#512BD4" />
+						<Label Text="TERMS" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
 						<Label x:Name="TermsLabel" TextColor="#374151" LineHeight="1.35" />
 					</VerticalStackLayout>
 				</ScrollView>
 
 				<VerticalStackLayout Grid.Row="2" Spacing="10">
-					<CheckBox x:Name="AcceptCheck" CheckedChanged="OnCheckedChanged" Color="#512BD4" />
+					<CheckBox x:Name="AcceptCheck" CheckedChanged="OnCheckedChanged" Color="{StaticResource Primary}" />
 					<Label Text="I have read and accept the Privacy Notice, Disclaimer, and Terms of Use."
 						   TextColor="#374151" Margin="38,-42,0,8" />
 					<Grid ColumnDefinitions="*,*" ColumnSpacing="10">
 						<Button Text="Exit" Clicked="OnExit" BackgroundColor="Transparent" BorderWidth="1" BorderColor="#9CA3AF" TextColor="#374151" />
 						<Button x:Name="ContinueButton" Grid.Column="1" Text="Accept &amp; Continue" Clicked="OnContinue"
-								IsEnabled="False" BackgroundColor="#512BD4" TextColor="White" />
+								IsEnabled="False" BackgroundColor="{StaticResource Primary}" TextColor="White" />
 					</Grid>
 				</VerticalStackLayout>
 			</Grid>

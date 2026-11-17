@@ -2,20 +2,36 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
-    <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <!-- Obsidian Precision design tokens -->
+    <Color x:Key="Surface">#0F131C</Color>
+    <Color x:Key="SurfaceBright">#353942</Color>
+    <Color x:Key="SurfaceContainerLowest">#0A0E16</Color>
+    <Color x:Key="SurfaceContainerLow">#181C24</Color>
+    <Color x:Key="SurfaceContainer">#202530</Color>
+    <Color x:Key="SurfaceContainerHigh">#2A303C</Color>
+    <Color x:Key="SurfaceContainerHighest">#353942</Color>
+    <Color x:Key="PrimaryHover">#E02E5A</Color>
+    <Color x:Key="PrimaryContainer">#3D1420</Color>
+    <Color x:Key="TextPrimary">#F0F2F5</Color>
+    <Color x:Key="TextSecondary">#94A3B8</Color>
+    <Color x:Key="TextMuted">#64748B</Color>
+    <Color x:Key="BorderColor">#2A303C</Color>
+    <Color x:Key="BorderActive">#FF3366</Color>
 
-    <Color x:Key="DarkBackground">#17171a</Color>
-    <Color x:Key="LightOnDarkBackground">#C3C3C3</Color>
+    <Color x:Key="Primary">#FF3366</Color>
+    <Color x:Key="PrimaryDark">#FF6B8E</Color>
+    <Color x:Key="PrimaryDarkText">#242424</Color>
+    <Color x:Key="Secondary">#FFD6E0</Color>
+    <Color x:Key="SecondaryDarkText">#FF6B8E</Color>
+    <Color x:Key="Tertiary">#B0123F</Color>
+
+    <Color x:Key="DarkBackground">#0F131C</Color>
+    <Color x:Key="LightOnDarkBackground">#F0F2F5</Color>
     <Color x:Key="LightBackground">#F2F2F2</Color>
     <Color x:Key="DarkOnLightBackground">#0D0D0D</Color>
 
     <Color x:Key="LightSecondaryBackground">#E0E0E0</Color>
-    <Color x:Key="DarkSecondaryBackground">#222228</Color>
+    <Color x:Key="DarkSecondaryBackground">#202530</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>

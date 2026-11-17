@@ -7,6 +7,8 @@ namespace MauiApp
         public App()
         {
             InitializeComponent();
+            // Obsidian Precision is a dark-first design; the Light button in the menu still overrides it.
+            UserAppTheme = AppTheme.Dark;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

@@ -10,9 +10,9 @@
 	<Grid>
 		<Grid.Background>
 			<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-				<GradientStop Color="#512BD4" Offset="0.0" />
-				<GradientStop Color="#8B5CF6" Offset="0.6" />
-				<GradientStop Color="#D600AA" Offset="1.0" />
+				<GradientStop Color="#FF3366" Offset="0.0" />
+				<GradientStop Color="#C21F4B" Offset="0.6" />
+				<GradientStop Color="#3D1420" Offset="1.0" />
 			</LinearGradientBrush>
 		</Grid.Background>
 
@@ -47,20 +47,20 @@
 							   IsVisible="{Binding IsSignUp}" TextColor="#111827" PlaceholderColor="#9CA3AF" />
 
 						<HorizontalStackLayout Spacing="8">
-							<CheckBox IsChecked="{Binding ShowPassword}" Color="#512BD4" />
+							<CheckBox IsChecked="{Binding ShowPassword}" Color="{StaticResource Primary}" />
 							<Label Text="Show password" VerticalOptions="Center" TextColor="#4B5563" />
 						</HorizontalStackLayout>
 
 						<Label Text="{Binding Error}" IsVisible="{Binding HasError}" TextColor="#DC2626" FontSize="13" />
 
 						<Button Text="{Binding SubmitText}" Command="{Binding SubmitCommand}" HeightRequest="52" CornerRadius="26"
-								FontAttributes="Bold" FontSize="16" BackgroundColor="#512BD4" TextColor="White" />
-						<ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#512BD4" />
+								FontAttributes="Bold" FontSize="16" BackgroundColor="{StaticResource Primary}" TextColor="White" />
+						<ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Primary}" />
 
 						<HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
 							<Label Text="{Binding SwitchText}" VerticalOptions="Center" TextColor="#6B7280" />
 							<Button Text="{Binding SwitchAction}" Command="{Binding ToggleModeCommand}" BackgroundColor="Transparent"
-									TextColor="#512BD4" FontAttributes="Bold" Padding="0" HeightRequest="40" />
+									TextColor="{StaticResource Primary}" FontAttributes="Bold" Padding="0" HeightRequest="40" />
 						</HorizontalStackLayout>
 					</VerticalStackLayout>
 				</Border>
