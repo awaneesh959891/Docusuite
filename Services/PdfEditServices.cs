@@ -128,6 +128,49 @@ public class PdfEditService : IPdfEditService
         }
     }
 
+    public string Crop(string input, double marginPercent, string pageRanges, string outputDir)
+    {
+        var margin = Math.Clamp(marginPercent, 0, 40) / 100.0;
+        if (margin <= 0)
+            throw new InvalidOperationException("Choose a crop margin greater than zero.");
+
+        using var doc = PdfReader.Open(input, PdfDocumentOpenMode.Modify);
+        var targets = Targets(pageRanges, doc.PageCount);
+        if (targets.Count == 0)
+            throw new InvalidOperationException("Select at least one page to crop.");
+
+        foreach (var number in targets)
+        {
+            var page = doc.Pages[number - 1];
+            var box = page.EffectiveCropBoxReadOnly;
+            if (box.IsEmpty)
+                box = page.MediaBoxReadOnly;
+            if (box.IsEmpty || box.Width <= 0 || box.Height <= 0)
+                throw new InvalidOperationException($"Page {number} has no usable page bounds.");
+
+            var insetX = box.Width * margin;
+            var insetY = box.Height * margin;
+            page.CropBox = new PdfRectangle(
+                new XPoint(box.X1 + insetX, box.Y1 + insetY),
+                new XPoint(box.X2 - insetX, box.Y2 - insetY));
+        }
+
+        return PdfDrawing.Save(doc, outputDir, $"{PdfOrganizeService.Name(input)}_cropped");
+    }
+
+    public string ClearBasicMetadata(string input, string outputDir)
+    {
+        using var doc = PdfReader.Open(input, PdfDocumentOpenMode.Modify);
+        foreach (var key in new[] { "/Title", "/Author", "/Subject", "/Keywords", "/Creator", "/Producer", "/CreationDate", "/ModDate", "/Trapped" })
+            doc.Info.Elements.Remove(key);
+
+        doc.Internals.Catalog.Elements.Remove("/Metadata");
+        foreach (var page in doc.Pages)
+            page.Elements.Remove("/Metadata");
+
+        return PdfDrawing.Save(doc, outputDir, $"{PdfOrganizeService.Name(input)}_metadata_cleared");
+    }
+
     private static List<int> Targets(string ranges, int pageCount) =>
         string.IsNullOrWhiteSpace(ranges)
             ? Enumerable.Range(1, pageCount).ToList()

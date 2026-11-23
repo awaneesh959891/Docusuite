@@ -13,6 +13,8 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
     private readonly IPdfEditService _edit;
     private readonly IPdfConvertService _convert;
     private readonly IPdfOptimizeService _optimize;
+    private readonly IPdfRecoveryService _recovery;
+    private readonly IPdfOcrService _ocr;
     private readonly IPdfSecurityService _security;
     private readonly IScanService _scan;
     private readonly HistoryService _history;
@@ -22,7 +24,8 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
     private readonly PdfOutputNamingService _outputNaming;
 
     public ToolViewModel(IPdfOrganizeService organize, IPdfEditService edit, IPdfConvertService convert,
-        IPdfOptimizeService optimize, IPdfSecurityService security, IScanService scan, HistoryService history,
+        IPdfOptimizeService optimize, IPdfRecoveryService recovery, IPdfOcrService ocr,
+        IPdfSecurityService security, IScanService scan, HistoryService history,
         AuthService auth, FeatureService features, PdfPresetService presets, PdfOutputNamingService outputNaming)
     {
         _auth = auth;
@@ -31,6 +34,8 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
         _edit = edit;
         _convert = convert;
         _optimize = optimize;
+        _recovery = recovery;
+        _ocr = ocr;
         _security = security;
         _scan = scan;
         _history = history;
@@ -74,6 +79,7 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
     [ObservableProperty] private double _margin = 20;
 
     [ObservableProperty] private int _compressionIndex = 1;
+    [ObservableProperty] private double _cropMarginPercent = 10;
 
     [ObservableProperty] private int _numberPositionIndex;
     [ObservableProperty] private int _numberFormatIndex;
@@ -123,13 +129,17 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
     public bool ShowRanges => Kind switch
     {
         PdfToolKind.Split => SplitModeIndex == 0,
-        PdfToolKind.RemovePages or PdfToolKind.ExtractPages or PdfToolKind.Rotate
+        PdfToolKind.RemovePages or PdfToolKind.ExtractPages or PdfToolKind.Rotate or PdfToolKind.Crop
             or PdfToolKind.PageNumbers or PdfToolKind.Watermark => true,
         _ => false
     };
     public bool ShowSplitOptions => Kind == PdfToolKind.Split;
     public bool ShowPagesPerFile => ShowSplitOptions && SplitModeIndex == 1;
     public bool ShowRotation => Kind == PdfToolKind.Rotate;
+    public bool ShowCrop => Kind == PdfToolKind.Crop;
+    public bool ShowMetadata => Kind == PdfToolKind.ClearMetadata;
+    public bool ShowRepair => Kind == PdfToolKind.Repair;
+    public bool ShowOcr => Kind == PdfToolKind.Ocr;
     public bool ShowImageOptions => Kind == PdfToolKind.ImagesToPdf || IsScan;
     public bool ShowMargin => ShowImageOptions && PageSizeIndex != 2;
     public bool ShowLandscape => Kind == PdfToolKind.ImagesToPdf && PageSizeIndex != 2;
@@ -155,6 +165,7 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
         PdfToolKind.RemovePages => "Pages to remove",
         PdfToolKind.ExtractPages => "Pages to extract",
         PdfToolKind.Rotate => "Pages to rotate (leave empty for all)",
+        PdfToolKind.Crop => "Pages to crop (leave empty for all)",
         PdfToolKind.PageNumbers => "Pages to number (leave empty for all)",
         PdfToolKind.Watermark => "Pages to watermark (leave empty for all)",
         _ => "Pages"
@@ -178,6 +189,11 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
         PdfToolKind.Copy => "Create copy",
         PdfToolKind.ImagesToPdf => "Create PDF",
         PdfToolKind.PdfToPng => "Export PNG pages",
+        PdfToolKind.PdfToJpg => "Export JPG pages",
+        PdfToolKind.Repair => "Rebuild PDF as a copy",
+        PdfToolKind.Ocr => "Extract text offline",
+        PdfToolKind.Crop => "Crop pages",
+        PdfToolKind.ClearMetadata => "Clear basic metadata",
         PdfToolKind.Compress => "Compress",
         PdfToolKind.PageNumbers => "Add page numbers",
         PdfToolKind.Watermark => "Add watermark",
@@ -215,7 +231,7 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
         foreach (var name in new[]
         {
             nameof(IsMultiple), nameof(IsImages), nameof(IsScan), nameof(ShowRanges), nameof(ShowSplitOptions),
-            nameof(ShowPagesPerFile), nameof(ShowRotation), nameof(ShowImageOptions), nameof(ShowMargin), nameof(ShowLandscape),
+            nameof(ShowPagesPerFile), nameof(ShowRotation), nameof(ShowCrop), nameof(ShowMetadata), nameof(ShowRepair), nameof(ShowOcr), nameof(ShowImageOptions), nameof(ShowMargin), nameof(ShowLandscape),
             nameof(ShowCompress), nameof(ShowPageNumbers), nameof(ShowWatermark), nameof(ShowProtect), nameof(ShowUnlock),
             nameof(ShowSign), nameof(ShowDrawMode), nameof(ShowTypeMode), nameof(ShowUploadMode), nameof(ShowNoOptions),
             nameof(ShowOptionsCard), nameof(RangesLabel), nameof(PickLabel), nameof(RunLabel), nameof(HasFiles)
@@ -514,6 +530,7 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
         Landscape = Landscape,
         Margin = Margin,
         CompressionIndex = CompressionIndex,
+        CropMarginPercent = CropMarginPercent,
         NumberPositionIndex = NumberPositionIndex,
         NumberFormatIndex = NumberFormatIndex,
         StartNumber = StartNumber,
@@ -543,6 +560,7 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
         Landscape = preset.Landscape;
         Margin = Math.Clamp(preset.Margin, 0, 72);
         CompressionIndex = Math.Clamp(preset.CompressionIndex, 0, CompressionLevels.Count - 1);
+        CropMarginPercent = Math.Clamp(preset.CropMarginPercent, 1, 40);
         NumberPositionIndex = Math.Clamp(preset.NumberPositionIndex, 0, NumberPositions.Count - 1);
         NumberFormatIndex = Math.Clamp(preset.NumberFormatIndex, 0, NumberFormats.Count - 1);
         StartNumber = Math.Max(1, preset.StartNumber);
@@ -588,6 +606,8 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
                 return "Enter the page ranges to split, e.g. 1-3, 5, 7-9.";
             case PdfToolKind.RemovePages or PdfToolKind.ExtractPages when string.IsNullOrWhiteSpace(Ranges):
                 return "Enter the page numbers first, e.g. 1-3, 5.";
+            case PdfToolKind.Crop when CropMarginPercent <= 0:
+                return "Choose a crop margin greater than zero.";
             case PdfToolKind.Split when SplitModeIndex == 1 && PagesPerFile < 1:
                 return "Pages per file must be at least 1.";
         }
@@ -628,7 +648,9 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
             var inputBytes = Files.Sum(f => f.SizeBytes);
             var operationId = Tool.Id;
             var outputPattern = OutputNamePattern.Trim();
-            var outputs = await Task.Run(() => _outputNaming.Apply(Execute(inputs), inputs[0], operationId, outputPattern));
+            var outputs = Kind == PdfToolKind.Ocr
+                ? _outputNaming.Apply([await _ocr.ExtractTextAsync(inputs[0], HistoryService.OutputDirectory)], inputs[0], operationId, outputPattern)
+                : await Task.Run(() => _outputNaming.Apply(Execute(inputs), inputs[0], operationId, outputPattern));
 
             Results.Clear();
             foreach (var path in outputs)
@@ -668,6 +690,14 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
 
     private string BuildStatus(long inputBytes, long outputBytes, int count)
     {
+        if (Kind == PdfToolKind.Repair)
+            return "Recovery completed. Pages were rebuilt as images; text, links, forms, layers, and interactive content were not preserved.";
+        if (Kind == PdfToolKind.Ocr)
+            return "Offline OCR completed. Recognized text was saved to a separate text file; the source PDF was not changed.";
+        if (Kind == PdfToolKind.Crop)
+            return "Visual crop complete. Content outside the crop area remains in the PDF and may be recoverable; this is not redaction.";
+        if (Kind == PdfToolKind.ClearMetadata)
+            return "Basic document info and XMP metadata cleared. Attachments, annotations, form data, scripts, and other embedded content are not sanitized.";
         if (Kind == PdfToolKind.Compress)
         {
             if (outputBytes >= inputBytes)
@@ -705,6 +735,16 @@ public partial class ToolViewModel : ObservableObject, IQueryAttributable
                 return [_convert.ImagesToPdf(inputs, (PageSizeOption)PageSizeIndex, Landscape, Margin, outDir)];
             case PdfToolKind.PdfToPng:
                 return PdfPageRenderService.ExportPngPages(first, outDir);
+            case PdfToolKind.PdfToJpg:
+                return PdfPageRenderService.ExportJpgPages(first, outDir);
+            case PdfToolKind.Repair:
+                return [_recovery.RebuildFromRenderedPages(first, outDir)];
+            case PdfToolKind.Ocr:
+                throw new InvalidOperationException("OCR must be executed asynchronously by the tool page.");
+            case PdfToolKind.Crop:
+                return [_edit.Crop(first, CropMarginPercent, ranges, outDir)];
+            case PdfToolKind.ClearMetadata:
+                return [_edit.ClearBasicMetadata(first, outDir)];
             case PdfToolKind.Compress:
                 return [_optimize.Compress(first, (CompressionLevel)CompressionIndex, outDir)];
             case PdfToolKind.PageNumbers:

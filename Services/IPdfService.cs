@@ -19,6 +19,8 @@ public interface IPdfEditService
     string Rotate(string input, int degrees, string pageRanges, string outputDir);
     string AddPageNumbers(string input, PageNumberOptions options, string outputDir);
     string AddWatermark(string input, WatermarkOptions options, string outputDir);
+    string Crop(string input, double marginPercent, string pageRanges, string outputDir);
+    string ClearBasicMetadata(string input, string outputDir);
 }
 
 public interface IPdfOptimizeService
@@ -37,6 +39,16 @@ public interface IPdfSecurityService
 public interface IPdfConvertService
 {
     string ImagesToPdf(IReadOnlyList<string> images, PageSizeOption size, bool landscape, double marginPoints, string outputDir);
+}
+
+public interface IPdfRecoveryService
+{
+    string RebuildFromRenderedPages(string input, string outputDirectory);
+}
+
+public interface IPdfOcrService
+{
+    Task<string> ExtractTextAsync(string input, string outputDirectory);
 }
 
 public interface IScanService

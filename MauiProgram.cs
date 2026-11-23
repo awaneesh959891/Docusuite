@@ -52,6 +52,8 @@ namespace MauiApp
             builder.Services.AddSingleton<IPdfEditService, PdfEditService>();
             builder.Services.AddSingleton<IPdfConvertService, PdfConvertService>();
             builder.Services.AddSingleton<IPdfOptimizeService, PdfOptimizeService>();
+            builder.Services.AddSingleton<IPdfRecoveryService, PdfRecoveryService>();
+            builder.Services.AddSingleton<IPdfOcrService, PdfOcrService>();
             builder.Services.AddSingleton<IPdfSecurityService, PdfSecurityService>();
             builder.Services.AddSingleton<IScanService, ScanService>();
             builder.Services.AddSingleton<HistoryService>();

@@ -14,6 +14,7 @@ public enum PdfToolCategory
 public enum PdfToolKind
 {
     Merge,
+    Organize,
     Split,
     RemovePages,
     ExtractPages,
@@ -21,6 +22,7 @@ public enum PdfToolKind
     Copy,
     ImagesToPdf,
     PdfToPng,
+    PdfToJpg,
     Compress,
     PageNumbers,
     Watermark,
@@ -28,6 +30,10 @@ public enum PdfToolKind
     Unlock,
     Sign,
     Scan,
+    Crop,
+    ClearMetadata,
+    Repair,
+    Ocr,
     ComingSoon
 }
 
@@ -40,7 +46,12 @@ public class PdfTool
     public required string AccentColor { get; init; }
     public required PdfToolCategory Category { get; init; }
     public PdfToolKind Kind { get; init; } = PdfToolKind.ComingSoon;
-    public bool IsAvailable => Kind != PdfToolKind.ComingSoon;
+    public bool IsAvailable => Kind switch
+    {
+        PdfToolKind.Ocr => OperatingSystem.IsAndroid(),
+        PdfToolKind.ComingSoon => false,
+        _ => true
+    };
     public double CardOpacity => IsAvailable ? 1.0 : 0.55;
 }
 

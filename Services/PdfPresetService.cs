@@ -15,6 +15,7 @@ public sealed class PdfOperationPreset
     public bool Landscape { get; set; }
     public double Margin { get; set; } = 20;
     public int CompressionIndex { get; set; } = 1;
+    public double CropMarginPercent { get; set; } = 10;
     public int NumberPositionIndex { get; set; }
     public int NumberFormatIndex { get; set; }
     public int StartNumber { get; set; } = 1;

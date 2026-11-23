@@ -52,7 +52,14 @@ public static class PdfPageRenderService
 #endif
     }
 
-    public static IReadOnlyList<string> ExportPngPages(string path, string outputDirectory, int width = 1600)
+    public static IReadOnlyList<string> ExportPngPages(string path, string outputDirectory, int width = 1600) =>
+        ExportPages(path, outputDirectory, width, SKEncodedImageFormat.Png, 100, ".png");
+
+    public static IReadOnlyList<string> ExportJpgPages(string path, string outputDirectory, int width = 1600, int quality = 92) =>
+        ExportPages(path, outputDirectory, width, SKEncodedImageFormat.Jpeg, Math.Clamp(quality, 1, 100), ".jpg");
+
+    private static IReadOnlyList<string> ExportPages(string path, string outputDirectory, int width,
+        SKEncodedImageFormat format, int quality, string extension)
     {
         Directory.CreateDirectory(outputDirectory);
         var pageCount = GetPageCount(path);
@@ -60,8 +67,16 @@ public static class PdfPageRenderService
         var outputs = new List<string>(pageCount);
         for (var index = 0; index < pageCount; index++)
         {
-            var target = UniquePath(outputDirectory, $"{name}_page_{index + 1:D3}", ".png");
-            File.WriteAllBytes(target, RenderPage(path, index, width));
+            var target = UniquePath(outputDirectory, $"{name}_page_{index + 1:D3}", extension);
+            var rendered = RenderPage(path, index, width);
+            if (format == SKEncodedImageFormat.Png)
+                File.WriteAllBytes(target, rendered);
+            else
+            {
+                using var bitmap = SKBitmap.Decode(rendered)
+                    ?? throw new InvalidOperationException($"Page {index + 1} could not be decoded for JPEG export.");
+                File.WriteAllBytes(target, ImageTools.Encode(bitmap, format, quality));
+            }
             outputs.Add(target);
         }
         return outputs;

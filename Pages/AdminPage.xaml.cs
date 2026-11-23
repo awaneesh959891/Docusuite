@@ -15,6 +15,8 @@ public partial class AdminPage : ContentPage
         _auth = auth;
     }
 
+    private async void OnFeatureControlClicked(object? sender, EventArgs e) => await Shell.Current.GoToAsync("//features");
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

@@ -31,8 +31,11 @@ DocSuite is an offline-first PDF management app built with **.NET MAUI** for Win
 ### PDF tools
 - Merge, split, compress, rotate, watermark, page numbers, protect (password) and unlock.
 - Visual (electronic) signature. This is **not** a certificate-based digital signature.
-- Image to PDF and PDF to PNG (every page exported as an image).
+- Image to PDF, PDF to PNG, and PDF to JPG (every page exported as an image).
+- Visual page cropping and basic document metadata removal.
 - Full-screen PDF preview. On Android, the native `PdfRenderer` is used, so preview works on all supported versions (API 24+). Other platforms use PDFtoImage.
+
+**Important limitations:** Crop changes the PDF page crop box; it does not erase the underlying content and must not be used to conceal sensitive information. Basic metadata removal clears common Info fields and XMP metadata only; it is not a full document sanitizer and does not guarantee removal of attachments, annotations, form data, scripts, or every embedded metadata field.
 
 ### Page organizer
 - Page thumbnails, drag-and-drop and button reordering, multi-select.
@@ -188,9 +191,9 @@ Key services: `PdfPageRenderService` (rendering and PNG export), `DocumentWorksp
 
 ## Roadmap
 
-Implemented: workspace, recycle bin, page organizer, batch processing, privacy dashboard, presets, output naming, history retention, PDF to PNG, Android preview fallback.
+Implemented: workspace, recycle bin, page organizer, batch processing, privacy dashboard, presets, output naming, history retention, PDF to PNG/JPG, visual crop, basic metadata removal, Android preview fallback.
 
-Planned: annotations, advanced scanning (edge detection, perspective correction), true redaction, encrypted vault (PIN/biometrics), OCR and full-text search, form filling, PDF comparison, signature profiles, metadata cleaner, command palette and shortcuts, completion screen with before/after sizes, more conversions (TIFF, WebP, Markdown, text), crop/resize/N-up/booklet, and hiding the admin tools behind an optional business workspace.
+Still planned or unavailable: annotations, advanced scanning (edge detection, perspective correction), true redaction, encrypted vault (PIN/biometrics), OCR and full-text search, form filling, PDF comparison, signature profiles, command palette and shortcuts, completion screen with before/after sizes, Office and Markdown conversions, PDF/A, repair, resize/N-up/booklet, and hiding the admin tools behind an optional business workspace. These are intentionally not advertised as available until the app has a suitable offline implementation and can validate the result.
 
 ## Contributing
 

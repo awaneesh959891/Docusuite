@@ -76,6 +76,10 @@
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'net11.0-android'">
+		<PackageReference Include="Xamarin.Google.MLKit.TextRecognition" Version="116.0.1.9" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.3.0" />

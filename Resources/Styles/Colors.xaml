@@ -17,6 +17,7 @@
     <Color x:Key="TextMuted">#64748B</Color>
     <Color x:Key="BorderColor">#2A303C</Color>
     <Color x:Key="BorderActive">#FF3366</Color>
+    <Color x:Key="Error">#FF6B6B</Color>
 
     <Color x:Key="Primary">#FF3366</Color>
     <Color x:Key="PrimaryDark">#FF6B8E</Color>

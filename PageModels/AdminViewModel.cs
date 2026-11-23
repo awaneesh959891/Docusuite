@@ -29,8 +29,20 @@ public partial class AdminViewModel : ObservableObject
     public ObservableCollection<HistoryEntry> History { get; } = [];
     public ObservableCollection<ToolUsage> TopTools { get; } = [];
     public ObservableCollection<UserAccount> Users { get; } = [];
+    public IReadOnlyList<UserAccount> FilteredUsers => string.IsNullOrWhiteSpace(UserSearchQuery)
+        ? Users.ToList()
+        : Users.Where(user => user.DisplayName.Contains(UserSearchQuery.Trim(), StringComparison.OrdinalIgnoreCase)
+            || user.Email.Contains(UserSearchQuery.Trim(), StringComparison.OrdinalIgnoreCase)).ToList();
+    public bool HasNoFilteredUsers => Users.Count > 0 && FilteredUsers.Count == 0;
 
+    [ObservableProperty] private string _userSearchQuery = string.Empty;
     [ObservableProperty] private string _userCount = "0";
+
+    partial void OnUserSearchQueryChanged(string value)
+    {
+        OnPropertyChanged(nameof(FilteredUsers));
+        OnPropertyChanged(nameof(HasNoFilteredUsers));
+    }
 
     [ObservableProperty] private string _operations = "0";
     [ObservableProperty] private string _filesCreated = "0";
@@ -225,6 +237,8 @@ public partial class AdminViewModel : ObservableObject
             Users.Add(u);
         UserCount = Users.Count.ToString();
         OnPropertyChanged(nameof(HasNoUsers));
+        OnPropertyChanged(nameof(FilteredUsers));
+        OnPropertyChanged(nameof(HasNoFilteredUsers));
     }
 
     public bool HasNoUsers => Users.Count == 0;

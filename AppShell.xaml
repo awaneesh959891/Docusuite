@@ -1,8 +1,8 @@
 <Shell
     x:Class="MauiApp.AppShell"
     xmlns:pages="clr-namespace:MauiApp.Pages"
-    Shell.FlyoutBehavior="{OnPlatform Default=Flyout, WinUI=Locked, MacCatalyst=Locked}"
-        Shell.FlyoutBackgroundColor="{StaticResource SurfaceContainerLowest}"
+    Shell.FlyoutBehavior="Flyout"
+    Shell.FlyoutBackgroundColor="{StaticResource SurfaceContainerLowest}"
     Title="DocSuite">
 
     <ShellContent

@@ -13,81 +13,108 @@
 	<ContentPage.Resources>
 		<Style x:Key="Card" TargetType="Border">
 			<Setter Property="StrokeThickness" Value="1" />
-			<Setter Property="Padding" Value="16" />
-			<Setter Property="Stroke" Value="{AppThemeBinding Light=#E5E7EB, Dark=#33333C}" />
-			<Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark={StaticResource DarkSecondaryBackground}}" />
-			<Setter Property="StrokeShape" Value="RoundRectangle 20" />
+			<Setter Property="Padding" Value="18" />
+			<Setter Property="Stroke" Value="{StaticResource BorderColor}" />
+			<Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}" />
+			<Setter Property="StrokeShape" Value="RoundRectangle 16" />
 		</Style>
 		<Style x:Key="SectionLabel" TargetType="Label">
 			<Setter Property="FontAttributes" Value="Bold" />
-			<Setter Property="FontSize" Value="13" />
-			<Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+			<Setter Property="FontSize" Value="12" />
+			<Setter Property="CharacterSpacing" Value="1.1" />
+			<Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
 		</Style>
 		<Style x:Key="Small" TargetType="Button">
 			<Setter Property="HeightRequest" Value="38" />
 			<Setter Property="Padding" Value="14,0" />
-			<Setter Property="CornerRadius" Value="19" />
+			<Setter Property="CornerRadius" Value="10" />
 			<Setter Property="FontSize" Value="13" />
+			<Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerHigh}" />
+			<Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
 		</Style>
 	</ContentPage.Resources>
 
 	<ScrollView>
-		<VerticalStackLayout Padding="20" Spacing="16" MaximumWidthRequest="820">
+		<VerticalStackLayout Padding="24" Spacing="20" MaximumWidthRequest="1200" HorizontalOptions="Center">
 
-			<Label Text="Admin" FontSize="28" FontAttributes="Bold"
-				   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark=White}" />
-			<Label Text="{Binding Status}" TextColor="{StaticResource Primary}" />
+			<!-- Console heading -->
+			<Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+				<VerticalStackLayout Spacing="4" VerticalOptions="Center">
+					<Label Text="LOCAL ADMIN CONSOLE" Style="{StaticResource SectionLabel}" TextColor="{StaticResource Secondary}" />
+					<Label Text="Administration &amp; insights" FontSize="30" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
+					<Label Text="Manage this device's DocSuite accounts, local PDF activity, and privacy settings." TextColor="{StaticResource TextSecondary}" />
+				</VerticalStackLayout>
+				<FlexLayout Grid.Column="1" Direction="Row" Wrap="Wrap" JustifyContent="End" AlignItems="Center">
+					<Button Text="Feature Control" Style="{StaticResource Small}" Clicked="OnFeatureControlClicked" Margin="0,0,8,0" />
+					<Button Text="Refresh" Style="{StaticResource Small}" Command="{Binding RefreshNowCommand}" />
+				</FlexLayout>
+			</Grid>
+			<Border BackgroundColor="{StaticResource PrimaryContainer}" Stroke="{StaticResource BorderActive}" StrokeThickness="1" Padding="12,10">
+				<Label Text="Local-only workspace · No tenant, cloud, billing, or compliance-service data is connected." TextColor="{StaticResource TextPrimary}" FontSize="13" />
+			</Border>
+			<Label Text="{Binding Status}" TextColor="{StaticResource Secondary}" />
 
 			<!-- Overview -->
 			<Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
 				<Border Style="{StaticResource Card}">
 					<VerticalStackLayout>
-						<Label Text="OPERATIONS" Style="{StaticResource SectionLabel}" />
-						<Label Text="{Binding Operations}" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+						<Label Text="TOOL OPERATIONS" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding Operations}" FontSize="30" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+						<Label Text="Recorded locally" FontSize="12" TextColor="{StaticResource TextMuted}" />
 					</VerticalStackLayout>
 				</Border>
 				<Border Grid.Column="1" Style="{StaticResource Card}">
 					<VerticalStackLayout>
-						<Label Text="FILES CREATED" Style="{StaticResource SectionLabel}" />
-						<Label Text="{Binding FilesCreated}" FontSize="28" FontAttributes="Bold" TextColor="#10B981" />
+						<Label Text="OUTPUT FILES" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding FilesCreated}" FontSize="30" FontAttributes="Bold" TextColor="{StaticResource Secondary}" />
+						<Label Text="Created by local tools" FontSize="12" TextColor="{StaticResource TextMuted}" />
 					</VerticalStackLayout>
 				</Border>
 				<Border Grid.Row="1" Style="{StaticResource Card}">
 					<VerticalStackLayout>
-						<Label Text="STORAGE USED" Style="{StaticResource SectionLabel}" />
-						<Label Text="{Binding Storage}" FontSize="28" FontAttributes="Bold" TextColor="#F59E0B" />
+						<Label Text="LOCAL OUTPUT STORAGE" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding Storage}" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource Tertiary}" />
+						<Label Text="Generated files on this device" FontSize="12" TextColor="{StaticResource TextMuted}" />
 					</VerticalStackLayout>
 				</Border>
 				<Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}">
 					<VerticalStackLayout>
-						<Label Text="SAVED BY COMPRESS" Style="{StaticResource SectionLabel}" />
-						<Label Text="{Binding Saved}" FontSize="28" FontAttributes="Bold" TextColor="#EC4899" />
+						<Label Text="SPACE SAVED" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding Saved}" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+						<Label Text="Estimated from compression history" FontSize="12" TextColor="{StaticResource TextMuted}" />
 					</VerticalStackLayout>
 				</Border>
 			</Grid>
 
-			<!-- Users -->
+			<!-- Local accounts -->
 			<Border Style="{StaticResource Card}">
-				<VerticalStackLayout Spacing="10">
-					<Label Text="{Binding UserCount, StringFormat='USERS ({0})'}" Style="{StaticResource SectionLabel}" />
-					<Label Text="No users have signed up yet." IsVisible="{Binding HasNoUsers}" />
-					<VerticalStackLayout BindableLayout.ItemsSource="{Binding Users}" Spacing="10">
+				<VerticalStackLayout Spacing="12">
+					<VerticalStackLayout Spacing="10">
+						<Label Text="LOCAL USER MANAGEMENT" Style="{StaticResource SectionLabel}" />
+						<Label Text="{Binding UserCount, StringFormat='{0} standard accounts on this device'}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
+						<Entry Text="{Binding UserSearchQuery}" Placeholder="Search by name or email" />
+					</VerticalStackLayout>
+					<Label Text="Accounts are stored locally. Disable or remove a standard account; the administrator account is protected." FontSize="12" TextColor="{StaticResource TextSecondary}" />
+					<Label Text="No users have signed up yet." IsVisible="{Binding HasNoUsers}" TextColor="{StaticResource TextSecondary}" />
+					<Label Text="No accounts match your search." IsVisible="{Binding HasNoFilteredUsers}" TextColor="{StaticResource TextSecondary}" />
+					<VerticalStackLayout BindableLayout.ItemsSource="{Binding FilteredUsers}" Spacing="10">
 						<BindableLayout.ItemTemplate>
 							<DataTemplate x:DataType="svc:UserAccount">
 								<Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
 									<VerticalStackLayout VerticalOptions="Center">
-										<Label Text="{Binding DisplayName}" FontAttributes="Bold" />
-										<Label Text="{Binding Email}" FontSize="12" Style="{StaticResource SectionLabel}" FontAttributes="None" />
-										<Label Text="{Binding LastSeen}" FontSize="11" Style="{StaticResource SectionLabel}" FontAttributes="None" />
-										<Label Text="{Binding Status}" FontSize="11" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+										<Label Text="{Binding DisplayName}" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
+										<Label Text="{Binding Email}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+										<Label Text="{Binding Joined}" FontSize="11" TextColor="{StaticResource TextMuted}" />
+										<Label Text="{Binding LastSeen}" FontSize="11" TextColor="{StaticResource TextMuted}" />
+										<Label Text="{Binding Status}" FontSize="11" FontAttributes="Bold" TextColor="{StaticResource Secondary}" />
 									</VerticalStackLayout>
 									<HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
 										<Button Text="{Binding ToggleText}" Style="{StaticResource Small}"
 												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=ToggleUserCommand}"
 												CommandParameter="{Binding .}" />
-										<Button Text="✕" Style="{StaticResource Small}" WidthRequest="38" Padding="0" TextColor="#EF4444"
-												Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteUserCommand}"
-												CommandParameter="{Binding .}" />
+										<Button Text="Remove" Style="{StaticResource Small}" TextColor="{StaticResource Error}"
+											Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AdminViewModel}}, Path=DeleteUserCommand}"
+											CommandParameter="{Binding .}" />
 									</HorizontalStackLayout>
 								</Grid>
 							</DataTemplate>
@@ -100,6 +127,7 @@
 			<Border Style="{StaticResource Card}" IsVisible="{Binding HasTopTools}">
 				<VerticalStackLayout Spacing="10">
 					<Label Text="MOST USED TOOLS" Style="{StaticResource SectionLabel}" />
+										<Label Text="Based on saved local activity history." FontSize="12" TextColor="{StaticResource TextMuted}" />
 					<VerticalStackLayout BindableLayout.ItemsSource="{Binding TopTools}" Spacing="8">
 						<BindableLayout.ItemTemplate>
 							<DataTemplate x:DataType="models:ToolUsage">
@@ -120,7 +148,7 @@
 			<!-- AI settings -->
 			<Border Style="{StaticResource Card}">
 				<VerticalStackLayout Spacing="8">
-					<Label Text="AI PROVIDER" Style="{StaticResource SectionLabel}" />
+					<Label Text="AI PROVIDER CONFIGURATION" Style="{StaticResource SectionLabel}" />
 					<Picker ItemsSource="{Binding Providers}" SelectedIndex="{Binding ProviderIndex}" />
 					<Label Text="Model / deployment" Style="{StaticResource SectionLabel}" FontAttributes="None" />
 					<Entry Text="{Binding Model}" />
@@ -132,15 +160,15 @@
 					</VerticalStackLayout>
 					<Button Text="Save AI settings" Command="{Binding SaveAiCommand}" Style="{StaticResource Small}"
 							BackgroundColor="{StaticResource Primary}" TextColor="White" HorizontalOptions="Start" />
-					<Label Text="AI tools (summarize, translate) arrive in a later phase and will use these settings."
-						   FontSize="12" Style="{StaticResource SectionLabel}" FontAttributes="None" />
+					<Label Text="Configuration is stored for future use; AI summarize and translate tools are currently unavailable."
+						   FontSize="12" TextColor="{StaticResource TextMuted}" />
 				</VerticalStackLayout>
 			</Border>
 
 			<!-- Preferences & storage -->
 			<Border Style="{StaticResource Card}">
 				<VerticalStackLayout Spacing="10">
-					<Label Text="PREFERENCES AND STORAGE" Style="{StaticResource SectionLabel}" />
+					<Label Text="PRIVACY &amp; LOCAL STORAGE" Style="{StaticResource SectionLabel}" />
 					<HorizontalStackLayout Spacing="10">
 						<Switch IsToggled="{Binding KeepHistory}" />
 						<Label Text="Keep activity history" VerticalOptions="Center" />
@@ -159,7 +187,7 @@
 			</Border>
 
 			<!-- History -->
-			<Label Text="RECENT ACTIVITY" Style="{StaticResource SectionLabel}" />
+			<Label Text="RECENT LOCAL ACTIVITY" Style="{StaticResource SectionLabel}" />
 			<Label Text="Nothing yet. Run a tool and it will show up here." IsVisible="{Binding HasNoHistory}" />
 			<VerticalStackLayout BindableLayout.ItemsSource="{Binding History}" Spacing="8" IsVisible="{Binding HasHistory}">
 				<BindableLayout.ItemTemplate>

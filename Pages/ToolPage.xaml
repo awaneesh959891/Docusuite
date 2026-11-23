@@ -158,6 +158,19 @@
 						<Picker ItemsSource="{Binding RotationOptions}" SelectedIndex="{Binding RotationIndex}" />
 					</VerticalStackLayout>
 
+					<!-- Visual crop -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowCrop}">
+						<Label Text="{Binding CropMarginPercent, StringFormat='Crop margin from each edge: {0:0}%'}" Style="{StaticResource FieldLabel}" />
+						<Slider Minimum="1" Maximum="40" Value="{Binding CropMarginPercent}" />
+						<Label Text="This changes the visible crop box only. It does not erase page content; do not use this feature to hide sensitive information." Style="{StaticResource FieldLabel}" FontSize="12" TextColor="{StaticResource Primary}" />
+					</VerticalStackLayout>
+
+					<!-- Basic metadata -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowMetadata}">
+						<Label Text="Removes standard document info fields and page/catalog XMP metadata." Style="{StaticResource FieldLabel}" />
+						<Label Text="This is not full sanitization. Attachments, annotations, form values, JavaScript, and other embedded data may remain. Review the output before sharing." Style="{StaticResource FieldLabel}" FontSize="12" TextColor="{StaticResource Primary}" />
+					</VerticalStackLayout>
+
 					<!-- Images / scan -->
 					<VerticalStackLayout Spacing="8" IsVisible="{Binding ShowImageOptions}">
 						<VerticalStackLayout Spacing="4" IsVisible="{Binding IsScan}">
@@ -178,6 +191,14 @@
 							<Label Text="{Binding Margin, StringFormat='Margin: {0:0} pt'}" Style="{StaticResource FieldLabel}" />
 							<Slider Minimum="0" Maximum="72" Value="{Binding Margin}" />
 						</VerticalStackLayout>
+					</VerticalStackLayout>
+
+					<!-- Repair and OCR limitations -->
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowRepair}">
+						<Label Text="Recovery renders each page and rebuilds a new PDF. It only works when the local PDF renderer can still open the damaged file. The result is rasterized; text, links, forms, layers, and metadata are not preserved." Style="{StaticResource FieldLabel}" FontSize="12" TextColor="{StaticResource Primary}" />
+					</VerticalStackLayout>
+					<VerticalStackLayout Spacing="4" IsVisible="{Binding ShowOcr}">
+						<Label Text="Runs offline on this Android device with the bundled Latin-script OCR model. Saves recognized text in a separate .txt file; it does not create a searchable PDF." Style="{StaticResource FieldLabel}" FontSize="12" TextColor="{StaticResource Secondary}" />
 					</VerticalStackLayout>
 
 					<!-- Compress -->
